@@ -1,0 +1,5 @@
+1.para_DWT.py得到设置各组超参数后，DWT-Informer的验证集mse的排序；
+para_ind.py得到设置各组超参数后，DWT-Informer的验证集mse的排序；
+2.main-informerDWT.py与main_informerind.py得到模型设置最优超参数后的测试集的mse与mae
+3.perminant.py保存了分别打乱每个变量十次后的90次实验的结果。
+4.data_read读取了以上结果，并生成了可解释的图。
