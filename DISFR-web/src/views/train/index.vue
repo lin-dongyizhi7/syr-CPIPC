@@ -1,7 +1,13 @@
 <template>
   <page>
     <template #input>
-      <el-form :model="formModel" :rules="formRules" ref="formRef">
+      <el-form
+        :model="formModel"
+        :rules="formRules"
+        ref="formRef"
+        label-width="100px"
+        label-position="left"
+      >
         <div class="file-receive">
           <div class="info-tip">下面两种方式二选一即可</div>
           <el-form-item label="输入待处理文件夹路径" label-position="top" prop="filePath">
@@ -10,7 +16,7 @@
               placeholder="C:\Users\Desktop\my-files"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" prop="draw">
+          <el-form-item label="" label-position="top">
             <el-upload
               class="upload-file"
               drag
@@ -27,11 +33,43 @@
             </el-upload>
           </el-form-item>
         </div>
-        <el-form-item label="选择基本模型类型">
+        <el-form-item label="基本模型类型">
           <el-select v-model="formModel.baseModel">
-            <el-option label="未选择模型则自动根据文件大小选择适合的模型进行训练" disabled></el-option>
-            <el-option v-for="model in models" :key="model" :label="model" :value="model"></el-option>
+            <el-option
+              label="未选择模型则自动根据文件大小选择适合的模型进行训练"
+              disabled
+              size="small"
+            ></el-option>
+            <el-option
+              v-for="model in models"
+              :key="model"
+              :label="model"
+              :value="model"
+            ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="是否启用GPU">
+          <el-switch v-model="formModel.gpu" size="small"></el-switch>
+        </el-form-item>
+        <el-form-item label="total_epoch">
+          <el-slider
+            v-model="formModel.totalEpoch"
+            :step="1"
+            :min="2"
+            :max="100"
+            show-input
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="batch_size">
+          <el-slider
+            v-model="formModel.batchSize"
+            :step="1"
+            :min="1"
+            :max="64"
+            show-input
+            size="small"
+          />
         </el-form-item>
       </el-form>
     </template>
@@ -52,7 +90,10 @@ import OptBtnProgress from "../../components/opt-btn-progress.vue";
 const formModel = reactive({
   filePath: "",
   file: null,
-  baseModel: 'DWT-Informer'
+  baseModel: "DWT-Informer",
+  totalEpoch: 20,
+  batchSize: 8,
+  gpu: false,
 });
 const formRef = ref();
 
@@ -60,7 +101,7 @@ const formRules = {
   //   filePath: [{ required: true, message: "未上传文件" }],
 };
 
-const models = ['DWT-Informer', 'Informer', 'LSTM', 'GRU'];
+const models = ["DWT-Informer", "Informer", "LSTM", "GRU"];
 </script>
 
 <style scoped lang="less">
@@ -71,5 +112,15 @@ const models = ['DWT-Informer', 'Informer', 'LSTM', 'GRU'];
 
 .upload-file {
   width: 100%;
+}
+
+:deep(.el-form-item__label) {
+  font-size: 12px;
+}
+
+:deep(.el-slider--with-input) {
+  .el-slider__input {
+    width: 100px;
+  }
 }
 </style>

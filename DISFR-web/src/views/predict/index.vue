@@ -10,7 +10,7 @@
               placeholder="C:\Users\Desktop\my-files"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" prop="draw">
+          <el-form-item label="" label-position="top">
             <el-upload
               class="upload-file"
               drag

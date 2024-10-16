@@ -51,6 +51,8 @@ const load = () => {
   height: 100%;
   background-color: #16b77788;
   border-radius: 12px;
+
+  font-size: 18px;
 }
 
 :deep(.el-progress) {

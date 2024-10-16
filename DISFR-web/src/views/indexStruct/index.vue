@@ -10,7 +10,7 @@
               placeholder="C:\Users\Desktop\my-files"
             ></el-input>
           </el-form-item>
-          <el-form-item label="" prop="draw">
+          <el-form-item label="" label-position="top">
             <el-upload
               class="upload-file"
               drag
@@ -42,7 +42,10 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="formModel.draw" label="画图风格">
-          <el-select v-model="formModel.drawStyle">
+          <el-select filterable allow-create v-model="formModel.drawStyle">
+            <template #header>
+              <el-button link @click="showAddStyle = true">自定义</el-button>
+            </template>
             <el-option v-for="item in styles" :label="item.label" :value="item.value">
               <div style="display: flex; align-items: center">
                 <color-style :colors="item.colors"></color-style> {{ item.label }}
@@ -60,6 +63,9 @@
     </template>
     <template #output></template>
   </page>
+  <el-dialog v-model="showAddStyle" title="自定义风格">
+    <add-style @save="saveStyle" @cancel="showAddStyle = false"></add-style>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +75,7 @@ import { UploadFilled } from "@element-plus/icons-vue";
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
 import ColorStyle from "../../components/color-style.vue";
+import addStyle from "../../components/add-style.vue";
 
 import { styles } from "../../enum/options";
 
@@ -84,6 +91,11 @@ const formRef = ref();
 
 const formRules = {
   //   filePath: [{ required: true, message: "未上传文件" }],
+};
+
+const showAddStyle = ref(false);
+const saveStyle = () => {
+  showAddStyle.value = false;
 };
 </script>
 
