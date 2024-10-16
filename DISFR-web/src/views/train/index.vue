@@ -21,14 +21,15 @@
               class="upload-file"
               drag
               action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :before-upload="handleBeforeUpload"
               multiple
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">
-                Drop file here or <em>click to upload</em>
+                拖拽文件到此处 或者 <em>点击此处</em>
               </div>
               <div class="el-upload__tip">
-                csv/xlsx/xls file with a size less than 10mb
+                小于100mb的csv/xlsx/xls文件
               </div>
             </el-upload>
           </el-form-item>
@@ -83,6 +84,8 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
+import type { UploadProps } from 'element-plus';
+import { ElMessage } from 'element-plus'
 
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
@@ -102,6 +105,17 @@ const formRules = {
 };
 
 const models = ["DWT-Informer", "Informer", "LSTM", "GRU"];
+
+const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  if (rawFile.type !== 'csv' && rawFile.type !== 'xlsx' && rawFile.type !== 'xls') {
+    ElMessage.error('文件必须是csv/xlsx/xls格式!');
+    return false;
+  } else if (rawFile.size / 1024 / 1024 > 100) {
+    ElMessage.error('文件大小超出限制!');
+    return false;
+  }
+  return true;
+}
 </script>
 
 <style scoped lang="less">
