@@ -36,7 +36,7 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress></opt-btn-progress>
+      <opt-btn-progress opt-name="训练"></opt-btn-progress>
     </template>
     <template #output></template>
   </page>
@@ -48,9 +48,6 @@ import { UploadFilled } from "@element-plus/icons-vue";
 
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
-import ColorStyle from "../../components/color-style.vue";
-
-import { styles } from "../../enum/options";
 
 const formModel = reactive({
   filePath: "",

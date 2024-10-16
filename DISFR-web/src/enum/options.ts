@@ -1,6 +1,6 @@
-export enum langType {
-  zhCn = "中文",
-  en = "English",
+export const langType = {
+  zhCn: "中文",
+  en: "English",
 }
 
 export const styles = [

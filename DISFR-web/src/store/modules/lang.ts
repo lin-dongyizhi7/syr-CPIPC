@@ -1,18 +1,19 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+type langType = "zhCn" | 'en'
 interface ILanguage {
-  language: string
+  language: langType;
 }
 
-export const useLangStore = defineStore('lang', {
+export const useLangStore = defineStore("lang", {
   state: (): ILanguage => {
     return {
-      language: sessionStorage.getItem('localeLang') || 'zhCn',
-    }
+      language: sessionStorage.getItem("localeLang") as langType || "zhCn",
+    };
   },
+  getters: {},
   actions: {
-    changeLang(data: 'zhCn' | 'en') {
-      this.language = data
+    changeLang(data: "zhCn" | "en") {
+      this.language = data;
     },
   },
-  persist: true,
-})
+});

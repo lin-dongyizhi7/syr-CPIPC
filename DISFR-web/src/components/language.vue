@@ -16,23 +16,25 @@
 </template>
 
 <script setup lang="ts">
-import { langType } from '@/enum/options'
-import { useLangStore } from '@/store/modules/lang'
-import { getCurrentInstance } from 'vue'
+import { langType } from "../enum/options";
+import { useLangStore } from "../store/modules/lang";
 
-const store = useLangStore()
-const { proxy } = getCurrentInstance() as any
-const handleCommand = (value: 'zhCn' | 'en') => {
-  if (store.language === value) return
-  proxy.$i18n.locale = value
-  store.changeLang(value)
-  ElMessage.closeAll()
-  ElMessage.success(`${value === 'en' ? '英文' : '中文'}切换成功！`)
-}
+import { getCurrentInstance } from "vue";
+import { ElMessage } from "element-plus";
+
+const store = useLangStore();
+const { proxy } = getCurrentInstance() as any;
+const handleCommand = (value: "zhCn" | "en") => {
+  if (store.language === value) return;
+  proxy.$i18n.locale = value;
+  store.changeLang(value);
+  ElMessage.closeAll();
+  ElMessage.success(`${value === "en" ? "英文" : "中文"}切换成功！`);
+};
 </script>
 
 <style scoped lang="scss">
-.lang-warp{
+.lang-warp {
   margin: 0 20px;
 }
 </style>

@@ -26,11 +26,20 @@
               </div>
             </el-upload>
           </el-form-item>
+          <el-form-item label="画图风格">
+          <el-select v-model="formModel.drawStyle">
+            <el-option v-for="item in styles" :label="item.label" :value="item.value">
+              <div style="display: flex; align-items: center">
+                <color-style :colors="item.colors"></color-style> {{ item.label }}
+              </div>
+            </el-option>
+          </el-select>
+        </el-form-item>
         </div>
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress></opt-btn-progress>
+      <opt-btn-progress opt-name="预测"></opt-btn-progress>
     </template>
     <template #output></template>
   </page>
@@ -49,6 +58,7 @@ import { styles } from "../../enum/options";
 const formModel = reactive({
   filePath: "",
   file: null,
+  drawStyle: 'common'
 });
 const formRef = ref();
 

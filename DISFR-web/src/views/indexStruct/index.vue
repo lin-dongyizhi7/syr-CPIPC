@@ -56,7 +56,7 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress></opt-btn-progress>
+      <opt-btn-progress opt-name="构造"></opt-btn-progress>
     </template>
     <template #output></template>
   </page>

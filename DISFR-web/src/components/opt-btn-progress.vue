@@ -1,6 +1,6 @@
 <template>
   <div v-if="!processing" class="start">
-    <el-button @click="startProcess">构造</el-button>
+    <el-button @click="startProcess">{{ optName }}</el-button>
   </div>
   <div v-else class="py-progress">
     <el-progress :percentage="percentage" :text-inside="true" striped></el-progress>
@@ -9,6 +9,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+
+const props = defineProps({
+  optName: {
+    type: String,
+  },
+});
 
 const processing = ref(false);
 const percentage = ref(0);
@@ -37,7 +43,7 @@ const load = () => {
 }
 
 .py-progress {
-    height: 100%;
+  height: 100%;
 }
 
 :deep(.el-button) {
@@ -48,22 +54,22 @@ const load = () => {
 }
 
 :deep(.el-progress) {
+  height: 100%;
+  .el-progress-bar {
     height: 100%;
-    .el-progress-bar {
-        height: 100%;
-    }
-    .el-progress-bar__outer{
-        height: 100% !important;
-        border-radius: 12px;
-    }
-    .el-progress-bar__inner {
-        border-radius: 12px;
-        background-color: #16b77788;
-    }
-    .el-progress-bar__innerText {
-        position: relative;
-        left: -50%;
-        transform: translateX(50%);
-    }
+  }
+  .el-progress-bar__outer {
+    height: 100% !important;
+    border-radius: 12px;
+  }
+  .el-progress-bar__inner {
+    border-radius: 12px;
+    background-color: #16b77788;
+  }
+  .el-progress-bar__innerText {
+    position: relative;
+    left: -50%;
+    transform: translateX(50%);
+  }
 }
 </style>
