@@ -37,9 +37,14 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="预测"></opt-btn-progress>
+      <opt-btn-progress opt-name="预测" @success="success = true"></opt-btn-progress>
     </template>
-    <template #output></template>
+    <template #output>
+      <div v-if="success">
+      <div>预测完成</div>
+      <img width="600px" src="../../../public/output.png" />
+      </div>
+    </template>
   </page>
 </template>
 
@@ -68,7 +73,11 @@ const formRules = {
 };
 
 const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
-  if (rawFile.type !== "csv" && rawFile.type !== "xlsx" && rawFile.type !== "xls") {
+  if (
+    rawFile.type.endsWith("csv") &&
+    rawFile.type.endsWith("xlsx") &&
+    rawFile.type.endsWith("xls")
+  ) {
     ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
   } else if (rawFile.size / 1024 / 1024 > 100) {
@@ -91,6 +100,8 @@ const handleOnChange = (uploadFile: UploadFile) => {
 };
 
 const uploadRequest = () => {};
+
+const success = ref(false);
 </script>
 
 <style scoped lang="less">

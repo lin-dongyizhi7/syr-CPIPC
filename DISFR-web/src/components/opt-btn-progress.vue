@@ -16,6 +16,8 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['success']);
+
 const processing = ref(false);
 const percentage = ref(0);
 
@@ -31,9 +33,10 @@ const load = () => {
     if (n > 100) {
       n = 100;
       clearInterval(timer);
+      emits('success');
     }
     percentage.value = n;
-  }, 100 + Math.random() * 1000);
+  }, 100 + Math.random() * 300);
 };
 </script>
 

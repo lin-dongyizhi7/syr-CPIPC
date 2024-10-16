@@ -58,9 +58,11 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="构造"></opt-btn-progress>
+      <opt-btn-progress opt-name="构造" @success="success = true"></opt-btn-progress>
     </template>
-    <template #output></template>
+    <template #output>
+      <div v-if="success">构造成功</div>
+    </template>
   </page>
   <el-dialog v-model="showAddStyle" title="自定义风格">
     <add-style @save="saveStyle" @cancel="showAddStyle = false"></add-style>
@@ -129,6 +131,8 @@ const handleOnChange = (uploadFile: UploadFile) => {
 };
 
 const uploadRequest = () => {};
+
+const success = ref(false);
 </script>
 
 <style scoped lang="less">
