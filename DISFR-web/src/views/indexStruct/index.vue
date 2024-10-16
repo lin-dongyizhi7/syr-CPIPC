@@ -14,18 +14,14 @@
             <el-upload
               class="upload-file"
               drag
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+              :http-request="uploadRequest"
               :before-upload="handleBeforeUpload"
               :on-change="handleOnChange"
               multiple
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-              <div class="el-upload__text">
-                拖拽文件到此处 或者 <em>点击此处</em>
-              </div>
-              <div class="el-upload__tip">
-                小于100mb的csv/xlsx/xls文件
-              </div>
+              <div class="el-upload__text">拖拽文件到此处 或者 <em>点击此处</em></div>
+              <div class="el-upload__tip">小于100mb的csv/xlsx/xls文件</div>
             </el-upload>
           </el-form-item>
         </div>
@@ -36,6 +32,7 @@
           <el-select
             filterable
             allow-create
+            default-first-option
             placeholder="自定义输入"
             v-model="formModel.drawThreshold"
           >
@@ -73,9 +70,9 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
-import type { UploadProps, UploadFile } from 'element-plus';
-import { ElMessage } from 'element-plus';
-import Papa from 'papaparse';
+import type { UploadProps, UploadFile } from "element-plus";
+import { ElMessage } from "element-plus";
+import Papa from "papaparse";
 
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
@@ -103,29 +100,35 @@ const saveStyle = () => {
   showAddStyle.value = false;
 };
 
-const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   console.log(rawFile);
-  if (rawFile.type.endsWith('csv') && rawFile.type.endsWith('xlsx') && rawFile.type.endsWith('xls')) {
-    ElMessage.error('文件必须是csv/xlsx/xls格式!');
+  if (
+    rawFile.type.endsWith("csv") &&
+    rawFile.type.endsWith("xlsx") &&
+    rawFile.type.endsWith("xls")
+  ) {
+    ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
   } else if (rawFile.size / 1024 / 1024 > 100) {
-    ElMessage.error('文件大小超出限制!');
+    ElMessage.error("文件大小超出限制!");
     return false;
   }
   return true;
-}
+};
 
 const handleOnChange = (uploadFile: UploadFile) => {
   console.log(uploadFile);
   Papa.parse(uploadFile.raw, {
-        header: true,
-        dynamicTyping: true,
-        complete: function(results: any) {
-          console.log('解析结果:', results.data);
-          // 在这里处理解析后的内容
-        }
-      });
-}
+    header: true,
+    dynamicTyping: true,
+    complete: function (results: any) {
+      console.log("解析结果:", results.data);
+      // 在这里处理解析后的内容
+    },
+  });
+};
+
+const uploadRequest = () => {};
 </script>
 
 <style scoped lang="less">
