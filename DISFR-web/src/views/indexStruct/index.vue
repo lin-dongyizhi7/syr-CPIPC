@@ -75,6 +75,7 @@ import { ref, reactive } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
 import type { UploadProps, UploadFile } from 'element-plus';
 import { ElMessage } from 'element-plus';
+import Papa from 'papaparse';
 
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
@@ -116,6 +117,14 @@ const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 
 const handleOnChange = (uploadFile: UploadFile) => {
   console.log(uploadFile);
+  Papa.parse(uploadFile.raw, {
+        header: true,
+        dynamicTyping: true,
+        complete: function(results: any) {
+          console.log('解析结果:', results.data);
+          // 在这里处理解析后的内容
+        }
+      });
 }
 </script>
 

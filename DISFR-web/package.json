@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "csv.js": "^2.0.1",
     "element-plus": "^2.8.5",
     "pinia": "^2.2.4",
     "vue": "^3.5.10",
