@@ -83,6 +83,8 @@ import addStyle from "../../components/add-style.vue";
 
 import { styles } from "../../enum/options";
 
+import {generateInd} from "../../api/api.ts";
+
 const formModel = reactive({
   filePath: "",
   file: null,
@@ -126,6 +128,7 @@ const handleOnChange = (uploadFile: UploadFile) => {
     complete: function (results: any) {
       console.log("解析结果:", results.data);
       // 在这里处理解析后的内容
+      generateInd(results.data);
     },
   });
 };
