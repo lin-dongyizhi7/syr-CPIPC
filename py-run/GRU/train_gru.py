@@ -1,18 +1,3 @@
-'''
-from sklearn import metrics
-import os
-import json
-import time
-import math
-import matplotlib.pyplot as plt
-import numpy as np
-from core.data_processor import DataLoader
-from core.model import Model
-from keras.utils import plot_model
-configs = json.load(open('config_2.json', 'r'))
-print(type(configs))
-print(configs)
-'''
 import random
 import tensorflow as tf
 import os
@@ -33,19 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from core.data_processor import DataLoader
 from core.model import Model
-from keras.utils import plot_model
 
-
-
-# 绘图展示结果test,修改
-def plot_results_test(predicted_data, true_data):
-    fig = plt.figure(facecolor='white')
-    ax = fig.add_subplot(111)
-    ax.plot(true_data, label='True Data')
-    plt.plot(predicted_data, label='Prediction')
-    plt.legend()
-    #plt.show()
-    plt.savefig('results_test.png')
 # 绘图展示结果train，修改
 def plot_results_train(predicted_data, true_data):
     fig = plt.figure(facecolor='white')
@@ -55,19 +28,11 @@ def plot_results_train(predicted_data, true_data):
     plt.legend()
     #plt.show()
     plt.savefig('results_train.png')
-# 绘图展示结果full，修改
-def plot_results_full(predicted_data, true_data):
-    fig = plt.figure(facecolor='white')
-    ax = fig.add_subplot(111)
-    ax.plot(true_data, label='True Data')
-    plt.plot(predicted_data, label='Prediction')
-    plt.legend()
-    #plt.show()
-    plt.savefig('results_full.png')
+
 
 
 #RNN时间序列
-def main():
+def train_gru(config):
     #读取所需参数
     configs = json.load(open('config_1.json', 'r'))
     if not os.path.exists(configs['model']['save_dir']): os.makedirs(configs['model']['save_dir'])
@@ -117,20 +82,3 @@ def main():
     # plot_results_multiple(predictions_multiseq, y_test, configs['data']['sequence_length'])
     plot_results_train(predictions_pointbypoint, y_train)
 
-
-
-
-if __name__ == '__main__':
-    main()
-'''
-def plot_results_multiple(predicted_data, true_data, prediction_len):
-    fig = plt.figure(facecolor='white')
-    ax = fig.add_subplot(111)
-    ax.plot(true_data, label='True Data')
-    plt.legend()
-    for i, data in enumerate(predicted_data):
-        padding = [None for p in range(i * prediction_len)]
-        plt.plot(padding + data, label='Prediction')
-    #plt.show()
-    plt.savefig('results_multiple_2.png')
-    '''
