@@ -17,6 +17,7 @@
               :http-request="uploadRequest"
               :before-upload="handleBeforeUpload"
               :on-change="handleOnChange"
+              :on-remove="handleOnRemove"
               multiple
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -58,7 +59,7 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="构造" @success="success = true"></opt-btn-progress>
+      <opt-btn-progress opt-name="构造" :reset="reset" @start="startGenerateInd" @success="success = true"></opt-btn-progress>
     </template>
     <template #output>
       <div v-if="success">构造成功，保存到opt目录下</div>
@@ -105,7 +106,7 @@ const saveStyle = () => {
 };
 
 const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
-  console.log(rawFile);
+  // console.log(rawFile);
   if (
     rawFile.type.endsWith("csv") &&
     rawFile.type.endsWith("xlsx") &&
@@ -120,20 +121,55 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   return true;
 };
 
-const handleOnChange = (uploadFile: UploadFile) => {
-  console.log(uploadFile);
+let fileData;
+let file;
+
+const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  file = uploadFile;
+  reset.value = false;
   Papa.parse(uploadFile.raw, {
     header: true,
     dynamicTyping: true,
     complete: function (results: any) {
-      console.log("解析结果:", results.data);
+      // console.log("解析结果:", results.data);
       // 在这里处理解析后的内容
-      generateInd({name: uploadFile.name, data: results.data});
+      fileData = results.data;
     },
   });
 };
 
+const reset = ref(false);
+const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  if (uploadFiles.length === 0) {
+    reset.value = true;
+  }
+}
+
 const uploadRequest = () => {};
+
+const startGenerateInd = () => {
+  if (formModel.filePath) {
+    let paths = filePath.split('/')
+    generateInd({
+      name: paths[paths.length - 1].split('.')[0],
+      filePath: formModel.filePath,
+      draw: formModel.draw,
+      drawThreshold: formModel.drawThreshold,
+      drawStyle: formModel.drawStyle,
+      normal: formModel.normal,
+    });
+  } else {
+    console.log(file);
+    generateInd({
+      name: file.name,
+      data: fileData,
+      draw: formModel.draw,
+      drawThreshold: formModel.drawThreshold,
+      drawStyle: formModel.drawStyle,
+      normal: formModel.normal,
+    });
+  }
+}
 
 const success = ref(false);
 </script>

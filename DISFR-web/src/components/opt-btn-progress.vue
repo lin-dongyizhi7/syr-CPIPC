@@ -3,32 +3,38 @@
     <el-button @click="startProcess">{{ optName }}</el-button>
   </div>
   <div v-else class="py-progress">
-    <el-progress :percentage="percentage" :text-inside="true" striped></el-progress>
+    <el-progress :percentage="percentage" :show-text="false" striped></el-progress>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import {computed, ref, watch} from "vue";
 
 const props = defineProps({
   optName: {
     type: String,
   },
+  reset: {
+    type: Boolean,
+  }
 });
 
-const emits = defineEmits(['success']);
+const emits = defineEmits(['start', 'success']);
 
+// const blank = computed(()=>props.reset);
 const processing = ref(false);
 const percentage = ref(0);
 
 const startProcess = () => {
   processing.value = true;
+  emits('start');
   load();
 };
 
 const load = () => {
   let n = 0;
-  var timer = setInterval(function () {
+  let timer;
+  timer = setInterval(function () {
     n = (n + Math.random() * 10) | 0;
     if (n > 100) {
       n = 100;
@@ -38,6 +44,12 @@ const load = () => {
     percentage.value = n;
   }, 100 + Math.random() * 300);
 };
+
+watch(props, (val) => {
+  if (val) {
+    processing.value = false;
+  }
+}, {deep: true});
 </script>
 
 <style scoped lang="less">
@@ -60,17 +72,21 @@ const load = () => {
 
 :deep(.el-progress) {
   height: 100%;
+
   .el-progress-bar {
     height: 100%;
   }
+
   .el-progress-bar__outer {
     height: 100% !important;
     border-radius: 12px;
   }
+
   .el-progress-bar__inner {
     border-radius: 12px;
     background-color: #16b77788;
   }
+
   .el-progress-bar__innerText {
     position: relative;
     left: -50%;

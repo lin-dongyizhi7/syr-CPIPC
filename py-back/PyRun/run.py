@@ -51,7 +51,7 @@ class Runner:
     def loadData(self, data):
         self.data = data
 
-    def generateIndicates(self):
+    def generateIndexes(self):
         return generateInd(self.data)
 
     def train(self):

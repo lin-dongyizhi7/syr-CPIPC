@@ -1,5 +1,9 @@
 import sys
 import os
+from pathlib import Path
+
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
 
 # 获取项目根目录
 project_root = os.path.abspath(os.path.dirname(__file__))
@@ -70,16 +74,30 @@ def INDEX(X,lam):
     return X
 
 negative = []
+def is_number(value):
+    try:
+        float(value)
+        return True
+    except (ValueError, TypeError):
+        return False
 def dataLoader(data):
     # 读取
-    if type(data) == 'string':
-        df = pd.read_csv(data)
+    if 'filePath' in data.keys():
+        file_extension = Path(data).suffix.lower()
+
+        # 根据文件扩展名选择读取方法
+        if file_extension == '.csv':
+            return pd.read_csv(data)
+        elif file_extension in ['.xlsx', '.xls']:
+            return pd.read_excel(data)
+        else:
+            raise ValueError(f"Unsupported file extension: {file_extension}")
     else:
-        df = pd.DataFrame(data)
-    # 复制取反
+        df = pd.DataFrame(data['data'])
+    # 复值取反
     for column in df.columns:
         # 检查列中的值是否全部为负数
-        if all(df[column] < 0):
+        if is_number(df[column]) and any(df[column] < 0):
             negative.append(column)
             # 将该列的所有值取反
             df[column] = -df[column]
@@ -89,10 +107,12 @@ def dataLoader(data):
     return df
 
 def generateInd(init_data):
-    if type(init_data) == 'string':
-        data = dataLoader(init_data)
-    else:
-        data = dataLoader(init_data.data)
+    name = init_data['name'].split('.')[0]
+    data = dataLoader(init_data)
+
+    # 测试用
+    # data.to_excel(f"{root}/opt/{name}-ind.xlsx")
+    # return
 
     start_day = '2018-01-01'
     con1 = data.index < start_day
@@ -103,7 +123,6 @@ def generateInd(init_data):
     for m in tqdm(range(header.shape[1]), desc="CDF-step1:"):
         b.append(CDF(header.iloc[:, m]))
     cdf_all = b[0]
-    print('CDF-finish:')
     for i in tqdm(range(1, len(b)), desc="CDF-step2:"):
         cdf_all = pd.concat([cdf_all, b[i]], axis=1)
     cdf_all.dropna(inplace=True)
@@ -124,15 +143,20 @@ def generateInd(init_data):
     EW = pd.concat([EW, pd.DataFrame(columns=['ind'])], sort=False)
     INDEX(EW, 0.93)
 
+    EW.to_excel(f"{root}/opt/{name}-ind.xlsx")
+
     ind_col = EW.loc[:, "ind"]
     mean = ind_col.mean()
     std = ind_col.std()
     ms = mean + std
 
+    if not init_data.draw:
+        return
+
     ind_col.plot(x_compat=True, figsize=(20, 10))
     matplotlib.pyplot.axhline(a)
     plt.ylabel("ind")
-    plt.savefig("../../ind.png")
+    plt.savefig(f"{root}/opt/{name}-ind.png")
     plt.show()
 
     result = {'info': 'success'}

@@ -1,8 +1,14 @@
 import sys
 import os
 
-for i in sys.path:
-    print(i)
+project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+
+# 在项目的入口点设置环境变量
+os.environ['PROJECT_ROOT'] = project_root
+print(f'project root:{project_root}')
+
+# for i in sys.path:
+#     print(i)
 
 from flask import request
 from flask_cors import *
@@ -27,7 +33,7 @@ runner = Runner()
 def generateInd():
     data = json.loads(request.data)
     runner.loadData(data)
-    result = runner.generateIndicates()
+    result = runner.generateIndexes()
     return JsonResponse.success(msg='查询成功', data=result)
 
 
@@ -44,13 +50,6 @@ def predict():
     isOk = False
     return JsonResponse.success(msg='预测成功') if isOk else JsonResponse.fail(msg='预测失败')
 
-
-@app.route("/delete", methods=["DELETE"])  # 删除（单个）
-def delete():
-    if 'id' not in request.args:
-        return JsonResponse.fail(msg='需要传入id')
-    isOk = db.modify(sql='delete from user where id=%s', args=[request.args['id']])
-    return JsonResponse.success(msg='删除成功') if isOk else JsonResponse.fail(msg='删除失败')
 
 
 # 运行flask：默认是5000端口，此处设置端口为666

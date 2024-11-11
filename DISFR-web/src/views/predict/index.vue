@@ -17,6 +17,7 @@
               :http-request="uploadRequest"
               :before-upload="handleBeforeUpload"
               :on-change="handleOnChange"
+              :on-remove="handleOnRemove"
               multiple
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -37,7 +38,7 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="预测" @success="success = true"></opt-btn-progress>
+      <opt-btn-progress opt-name="预测" :reset="reset" @start="startPredictModel" @success="success = true"></opt-btn-progress>
     </template>
     <template #output>
       <div v-if="success">
@@ -60,6 +61,8 @@ import OptBtnProgress from "../../components/opt-btn-progress.vue";
 import ColorStyle from "../../components/color-style.vue";
 
 import { styles } from "../../enum/options";
+
+import {startPredict} from "../../api/api.ts";
 
 const formModel = reactive({
   filePath: "",
@@ -87,19 +90,37 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   return true;
 };
 
+let fileData;
+let file;
+
 const handleOnChange = (uploadFile: UploadFile) => {
-  console.log(uploadFile);
+  file = uploadFile;
+  reset.value = false;
   Papa.parse(uploadFile.raw, {
     header: true,
     dynamicTyping: true,
     complete: function (results: any) {
       console.log("解析结果:", results.data);
       // 在这里处理解析后的内容
+      fileData = results.data;
     },
   });
 };
 
+const reset = ref(false);
+const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  if (uploadFiles.length === 0) {
+    reset.value = true;
+  }
+}
+
 const uploadRequest = () => {};
+
+const startPredictModel = () => {
+  console.log(file);
+  console.log(fileData);
+  startPredict({});
+};
 
 const success = ref(false);
 </script>
