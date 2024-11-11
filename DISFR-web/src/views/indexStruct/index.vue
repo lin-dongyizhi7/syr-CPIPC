@@ -61,7 +61,7 @@
       <opt-btn-progress opt-name="构造" @success="success = true"></opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="success">构造成功</div>
+      <div v-if="success">构造成功，保存到opt目录下</div>
     </template>
   </page>
   <el-dialog v-model="showAddStyle" title="自定义风格">
@@ -128,7 +128,7 @@ const handleOnChange = (uploadFile: UploadFile) => {
     complete: function (results: any) {
       console.log("解析结果:", results.data);
       // 在这里处理解析后的内容
-      generateInd(results.data);
+      generateInd({name: uploadFile.name, data: results.data});
     },
   });
 };

@@ -3,14 +3,15 @@ import request from "../utils/request.js";
 const baseUrl = ''
 
 // 指标构建
-export const generateInd = (params) => {
+export const generateInd = (data) => {
   return request({
     url: baseUrl + "/generateInd",
-    method: "get",
+    method: "post",
+    data
   });
 }
 // 开始训练
-export const startTrain = (params) => {
+export const startTrain = (data) => {
   return request({
     url: baseUrl + "/train",
     method: "post",
@@ -18,7 +19,7 @@ export const startTrain = (params) => {
   });
 }
 // 预测
-export const startPredict = (params) => {
+export const startPredict = (data) => {
   return request({
     url: baseUrl + "/predict",
     method: "post",

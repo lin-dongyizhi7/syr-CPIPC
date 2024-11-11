@@ -1,3 +1,10 @@
+import sys
+import os
+
+# 获取项目根目录
+project_root = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(project_root)
+
 from indicate.ind import generateInd
 
 from Informer.train_DWT_informer import train_DWT_informer
@@ -25,12 +32,12 @@ test_map = {
 }
 
 class Runner:
-    def __init__(self, configs):
-        self.model = configs.model or ''
-        self.model_config = configs.model_config or None
-        self.file_info = configs.file_info or None
-        self.output = configs.output or None
-        self.draw_config = configs.draw_config or None
+    def __init__(self):
+        self.model = ''
+        self.model_config = None
+        self.file_info = None
+        self.output = None
+        self.draw_config = None
         self.data = None
 
     def loadParams(self, params):
