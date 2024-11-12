@@ -40,15 +40,21 @@ class Runner:
         self.draw_config = None
         self.data = None
 
-    def loadParams(self, params):
-        self.model = params.model or ''
-        self.model_config = params.model_config or None
-        self.file_info = params.file_info or None
-        self.output = params.output or None
-        self.draw_config = params.draw_config or None
-        self.data = None
+    def loadTrainParams(self, params):
+        self.model = params['model']
+        self.model_config = params['model_config']
+        self.file_info = params['file_info']
+        self.data = params['data']
 
-    def loadData(self, data):
+    def loadPredictParams(self, params):
+        self.model = params['model']
+        self.model_config = params['model_config']
+        self.file_info = params['file_info']
+        self.output = params['output']
+        self.draw_config = params['draw_config']
+        self.data = params['data']
+
+    def loadIndData(self, data):
         self.data = data
 
     def generateIndexes(self):
@@ -58,10 +64,22 @@ class Runner:
         if self.file_info is None:
             return
         if self.model:
-            train_map[self.model](self.model_config)
+            config = {
+                'model_config': self.model_config,
+                'file_info': self.file_info,
+                'data': self.data,
+            }
+            train_map[self.model](config)
 
-    def test(self):
+    def predict(self):
         if self.file_info is None:
             return
         if self.model:
-            test_map[self.model](self.model_config)
+            config = {
+                'model_config': self.model_config,
+                'file_info': self.file_info,
+                'data': self.data,
+                'output': self.output,
+                'draw_config': self.draw_config,
+            }
+            test_map[self.model](config)

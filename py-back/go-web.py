@@ -5,7 +5,7 @@ project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 # 在项目的入口点设置环境变量
 os.environ['PROJECT_ROOT'] = project_root
-print(f'project root:{project_root}')
+# print(f'project root:{project_root}')
 
 # for i in sys.path:
 #     print(i)
@@ -28,11 +28,13 @@ CORS(app, supports_credentials=True)
 
 runner = Runner()
 
+print('start----------')
+
 # 编写视图函数，绑定路由
 @app.route("/generateInd", methods=["POST"])  # 查询（全部）
 def generateInd():
     data = json.loads(request.data)
-    runner.loadData(data)
+    runner.loadIndData(data)
     result = runner.generateIndexes()
     return JsonResponse.success(msg='查询成功', data=result)
 
@@ -40,14 +42,45 @@ def generateInd():
 @app.route("/train", methods=["POST"])  # 添加（单个）
 def train():
     data = json.loads(request.data)  # 将json字符串转为dict
-    isOk = False
+    params = {
+        'model': data['baseModel'],
+        'model_config': {
+            'totalEpoch': data['totalEpoch'],
+            'batchSize': data['batchSize'],
+            'gpu': data['gpu'],
+        },
+        'file_info': {
+            'type': data['type'],
+            'name': data['name'],
+            'path': data['filePath'] if 'filePath' in data else '',
+        },
+        'data': data['data'] if 'data' in data else ''
+    }
+    runner.loadTrainParams(params)
+    isOk = runner.train()
     return JsonResponse.success(msg='训练成功') if isOk else JsonResponse.fail(msg='训练失败')
 
 
 @app.route("/predict", methods=["POST"])  # 修改（单个）
 def predict():
     data = json.loads(request.data)  # 将json字符串转为dict
-    isOk = False
+    params = {
+        'model': data['model'],
+        'model_config': {
+            'totalEpoch': data['totalEpoch'],
+            'batchSize': data['batchSize'],
+        },
+        'file_info': {
+            'name': data['name'],
+            'path': data['filePath'] if 'filePath' in data else '',
+        },
+        'draw_config': {
+            'drawStyle': data['drawStyle'],
+        },
+        'data': data['data'] if 'data' in data else ''
+    }
+    runner.loadPredictParams(params)
+    isOk = runner.predict()
     return JsonResponse.success(msg='预测成功') if isOk else JsonResponse.fail(msg='预测失败')
 
 

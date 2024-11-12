@@ -22,7 +22,7 @@
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">拖拽文件到此处 或者 <em>点击此处</em></div>
-              <div class="el-upload__tip">小于100mb的csv/xlsx/xls文件</div>
+              <div class="el-upload__tip">小于10MB的csv/xlsx/xls文件</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="画图风格">
@@ -41,9 +41,10 @@
       <opt-btn-progress opt-name="预测" :reset="reset" @start="startPredictModel" @success="success = true"></opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="success">
-      <div>预测完成</div>
-      <img width="600px" src="../../../public/output.png" />
+      <div v-if="starting">预测中</div>
+      <div v-if="success && finished">
+        <div>预测完成</div>
+        <img width="600px" src="../../../public/output.png" />
       </div>
     </template>
   </page>
@@ -62,7 +63,7 @@ import ColorStyle from "../../components/color-style.vue";
 
 import { styles } from "../../enum/options";
 
-import {startPredict} from "../../api/api.ts";
+import {startPredict, startTrain} from "../../api/api.ts";
 
 const formModel = reactive({
   filePath: "",
@@ -83,7 +84,7 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   ) {
     ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
-  } else if (rawFile.size / 1024 / 1024 > 100) {
+  } else if (rawFile.size / 1024 / 1024 > 10) {
     ElMessage.error("文件大小超出限制!");
     return false;
   }
@@ -117,11 +118,32 @@ const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
 const uploadRequest = () => {};
 
 const startPredictModel = () => {
-  console.log(file);
-  console.log(fileData);
-  startPredict({});
+  starting.value = true;
+  if (formModel.filePath) {
+    let paths = filePath.split('/');
+    let name = paths.split('.')[0];
+    startPredict({
+      name: name,
+      filePath: formModel.filePath,
+      drawStyle: formModel.drawStyle
+    }).then((results: any) => {
+      finished.value = true;
+      starting.value = false;
+    });
+  } else {
+    startPredict({
+      name: file.name.split('.')[0],
+      data: fileData,
+      drawStyle: formModel.drawStyle
+    }).then((results: any) => {
+      finished.value = true;
+      starting.value = false;
+    });
+  }
 };
 
+const starting = ref(false);
+const finished = ref(false);
 const success = ref(false);
 </script>
 

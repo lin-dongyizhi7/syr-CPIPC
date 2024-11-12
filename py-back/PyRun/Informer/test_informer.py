@@ -7,6 +7,10 @@ import torch
 
 import sys
 import os
+from pathlib import Path
+
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
 
 # 获取项目根目录
 project_root = os.path.abspath(os.path.dirname(__file__))
@@ -26,6 +30,7 @@ def setup_seed(seed):
 
 setup_seed(415)
 
+from methods import initModelData
 from exp.exp_informer import Exp_Informer
 
 parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecasting')
@@ -119,10 +124,11 @@ args.s_layers = [int(s_l) for s_l in args.s_layers.replace(' ', '').split(',')]
 args.detail_freq = args.freq
 args.freq = args.freq[-1:]
 
-print('Args in experiment:')
-print(args)
+# print('Args in experiment:')
+# print(args)
 
 Exp = Exp_Informer
 
 def test_informer(config):
+    initModelData(config)
     return

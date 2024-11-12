@@ -22,7 +22,7 @@
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">拖拽文件到此处 或者 <em>点击此处</em></div>
-              <div class="el-upload__tip">小于100mb的csv/xlsx/xls文件</div>
+              <div class="el-upload__tip">小于10MB的csv/xlsx/xls文件</div>
             </el-upload>
           </el-form-item>
         </div>
@@ -62,7 +62,8 @@
       <opt-btn-progress opt-name="构造" :reset="reset" @start="startGenerateInd" @success="success = true"></opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="success">构造成功，保存到opt目录下</div>
+      <div v-if="starting">构造中</div>
+      <div v-if="success && finished">构造成功，保存到opt目录下</div>
     </template>
   </page>
   <el-dialog v-model="showAddStyle" title="自定义风格">
@@ -114,7 +115,7 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   ) {
     ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
-  } else if (rawFile.size / 1024 / 1024 > 100) {
+  } else if (rawFile.size / 1024 / 1024 > 10) {
     ElMessage.error("文件大小超出限制!");
     return false;
   }
@@ -148,6 +149,7 @@ const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
 const uploadRequest = () => {};
 
 const startGenerateInd = () => {
+  starting.value = true;
   if (formModel.filePath) {
     let paths = filePath.split('/')
     generateInd({
@@ -157,9 +159,11 @@ const startGenerateInd = () => {
       drawThreshold: formModel.drawThreshold,
       drawStyle: formModel.drawStyle,
       normal: formModel.normal,
+    }).then((results: any) => {
+      finished.value = true;
+      starting.value = false;
     });
   } else {
-    console.log(file);
     generateInd({
       name: file.name,
       data: fileData,
@@ -167,10 +171,15 @@ const startGenerateInd = () => {
       drawThreshold: formModel.drawThreshold,
       drawStyle: formModel.drawStyle,
       normal: formModel.normal,
+    }).then((results: any) => {
+      finished.value = true;
+      starting.value = false;
     });
   }
 }
 
+const starting = ref(false);
+const finished = ref(false);
 const success = ref(false);
 </script>
 

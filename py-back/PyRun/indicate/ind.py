@@ -83,13 +83,14 @@ def is_number(value):
 def dataLoader(data):
     # 读取
     if 'filePath' in data.keys():
-        file_extension = Path(data).suffix.lower()
+        path = data['filePath']
+        file_extension = Path(path).suffix.lower()
 
         # 根据文件扩展名选择读取方法
         if file_extension == '.csv':
-            return pd.read_csv(data)
+            df = pd.read_csv(path)
         elif file_extension in ['.xlsx', '.xls']:
-            return pd.read_excel(data)
+            df = pd.read_excel(path)
         else:
             raise ValueError(f"Unsupported file extension: {file_extension}")
     else:

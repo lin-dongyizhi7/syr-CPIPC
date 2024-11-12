@@ -1,5 +1,9 @@
 import numpy as np
 import torch
+import os
+
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
 
 def adjust_learning_rate(optimizer, epoch, args):
     # lr = args.learning_rate * (0.2 ** (epoch // 2))
@@ -17,7 +21,7 @@ def adjust_learning_rate(optimizer, epoch, args):
         print('Updating learning rate to {}'.format(lr))
 
 class EarlyStopping:
-    def __init__(self, patience=7, verbose=False, delta=0):
+    def __init__(self, name, patience=7, verbose=False, delta=0):
         self.patience = patience
         self.verbose = verbose
         self.counter = 0
@@ -25,6 +29,7 @@ class EarlyStopping:
         self.early_stop = False
         self.val_loss_min = np.Inf
         self.delta = delta
+        self.name = name
 
     def __call__(self, val_loss, model, path):
         score = -val_loss
@@ -44,7 +49,7 @@ class EarlyStopping:
     def save_checkpoint(self, val_loss, model, path):
         if self.verbose:
             print(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
-        torch.save(model.state_dict(), path+'/'+'checkpoint.pth')
+        torch.save(model.state_dict(), f'{root}/model/{self.name}-saved_model.pth')
         self.val_loss_min = val_loss
 
 class dotdict(dict):

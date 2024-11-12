@@ -7,6 +7,10 @@ import torch
 
 import sys
 import os
+from pathlib import Path
+
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
 
 # 获取项目根目录
 project_root = os.path.abspath(os.path.dirname(__file__))
@@ -26,6 +30,7 @@ def setup_seed(seed):
 
 setup_seed(415)
 
+from methods import initModelData
 from exp.exp_informer import Exp_Informer
 
 parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecasting')
@@ -119,10 +124,78 @@ args.s_layers = [int(s_l) for s_l in args.s_layers.replace(' ', '').split(',')]
 args.detail_freq = args.freq
 args.freq = args.freq[-1:]
 
-print('Args in experiment:')
-print(args)
+# print('Args in experiment:')
+# print(args)
 
 Exp = Exp_Informer
 
+def train():
+    for ii in range(args.itr):
+        # setting record of experiments
+        setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                   .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                           args.pred_len,args.d_model,args.n_heads,args.e_layers,args.d_layers,
+                           args.d_ff,args.attn,args.factor,args.embed,args.distil,args.mix,args.des0,ii))
+        settingtr = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                    .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                            args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
+                            args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des1, ii))
+        settingv = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                    .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                            args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
+                            args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des2, ii))
+        settingte = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                    .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                            args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
+                            args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des3, ii))
+        settingf = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                    .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                            args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
+                            args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des4, ii))
+        setting0 = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
+                    .format(args.model, args.data, args.features, args.seq_len, args.label_len,
+                            args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
+                            args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des0, ii))
+
+        exp = Exp(args)  # set experiments
+        print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
+        exp.train(setting)
+        if ii == 1:
+            print('>>>>>>> pretesting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting0))
+            exp.pretest(setting0)
+
+        print('>>>>>>> protring : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(settingtr))
+        exp.protr(settingtr)
+        print('>>>>>>> proving : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(settingv))
+        exp.prov(settingv)
+        print('>>>>>>>testing  : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(settingte))
+        exp.test(settingte)
+        print('>>>>>>> profing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(settingf))
+        exp.prof(settingf)
+
+        torch.cuda.empty_cache()
+
 def train_DWT_informer(config):
-    return
+    initModelData(config)
+
+    name = config['file_info']['name']
+    args.root_path = root + '/py-back/PyRun/Informer/data/'
+    args.data_path = name +'.csv'
+    args.target = 'ind'
+    args.data = name
+    args.train_epochs = config['model_config']['totalEpoch']
+    args.batch_size = config['model_config']['batchSize']
+    args.gpu = config['model_config']['gpu']
+
+    print('Args in experiment:')
+    print(args)
+
+    try:
+        train()
+        # 保存模型
+        torch.save(model.state_dict(), f'{root}/model/{name}/informer_model.pth')
+        print("Model has been saved to informer_model.pth")
+        return True
+    except Exception as e:
+        print(e)
+        return False
