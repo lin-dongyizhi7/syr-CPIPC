@@ -12,10 +12,10 @@ from Informer.train_informer import train_informer
 from GRU.train_gru import train_gru
 from LSTM.train_lstm import train_lstm
 
-from Informer.test_DWT_informer import test_DWT_informer
-from Informer.test_informer import test_informer
-from GRU.test_gru import test_gru
-from LSTM.test_lstm import test_lstm
+from Informer.predict_DWT_informer import predict_DWT_informer
+from Informer.predict_informer import predict_informer
+from GRU.predict_gru import predict_gru
+from LSTM.predict_lstm import predict_lstm
 
 train_map = {
     'DWT-Informer': train_DWT_informer,
@@ -24,12 +24,24 @@ train_map = {
     'LSTM': train_lstm,
 }
 
-test_map = {
-    'DWT-Informer': test_DWT_informer,
-    'Informer': test_informer,
-    'GRU': test_gru,
-    'LSTM': test_lstm,
+predict_map = {
+    'DWT-Informer': predict_DWT_informer,
+    'Informer': predict_informer,
+    'GRU': predict_gru,
+    'LSTM': predict_lstm,
 }
+
+
+def getModelType(dir_name):
+    if dir_name.endswith('DWT'):
+        return 'DWT-Informer'
+    elif dir_name.endswith('lstm'):
+        return 'LSTM'
+    elif dir_name.endswith('gru'):
+        return 'GRU'
+    else:
+        return 'Informer'
+
 
 class Runner:
     def __init__(self):
@@ -48,7 +60,6 @@ class Runner:
 
     def loadPredictParams(self, params):
         self.model = params['model']
-        self.model_config = params['model_config']
         self.file_info = params['file_info']
         self.output = params['output']
         self.draw_config = params['draw_config']
@@ -75,11 +86,18 @@ class Runner:
         if self.file_info is None:
             return
         if self.model:
+            # 使用 os.path.dirname 获取父目录
+            parent_dir = os.path.dirname(self.model)
+            # 使用 os.path.basename 获取父目录的最后一级目录名
+            dir_name = os.path.basename(parent_dir)
+            model_type = getModelType(dir_name)
+
             config = {
-                'model_config': self.model_config,
+                'model': self.model,
                 'file_info': self.file_info,
                 'data': self.data,
                 'output': self.output,
                 'draw_config': self.draw_config,
             }
-            test_map[self.model](config)
+            predict_map[model_type](config)
+

@@ -16,6 +16,7 @@ root = os.getenv('PROJECT_ROOT')
 project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(project_root)
 
+
 def setup_seed(seed):
     torch.manual_seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -31,6 +32,7 @@ def setup_seed(seed):
 setup_seed(415)
 
 from methods import initModelData
+from DWT import getDWTRes
 from exp.exp_informer import Exp_Informer
 
 parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecasting')
@@ -38,9 +40,9 @@ parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecast
 parser.add_argument('--model', type=str, required=False, default='informer',
                     help='model of experiment, options: [informer, informerstack, informerlight(TBD)]')
 
-parser.add_argument('--data', type=str, required=False, default='ind13-20-day', help='data')
+parser.add_argument('--data', type=str, required=False, default='DWT13-20', help='data')
 parser.add_argument('--root_path', type=str, default='./data/', help='root path of the data file')
-parser.add_argument('--data_path', type=str, default='ind13-20-day.csv', help='data file')
+parser.add_argument('--data_path', type=str, default='DWT13-20.csv', help='data file')
 parser.add_argument('--features', type=str, default='MS',
                     help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
 parser.add_argument('--target', type=str, default='ind', help='target feature in S or MS task')
@@ -58,7 +60,7 @@ parser.add_argument('--dec_in', type=int, default=7, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=7, help='output size')
 parser.add_argument('--d_model', type=int, default=512, help='dimension of model')  # 原来是512                需要调优
 parser.add_argument('--n_heads', type=int, default=16, help='num of heads')  # 原来8
-parser.add_argument('--e_layers', type=int, default=3, help='num of encoder layers')  # 原来是2                需要调优
+parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')  # 原来是2                需要调优
 parser.add_argument('--d_layers', type=int, default=2, help='num of decoder layers')  #
 parser.add_argument('--s_layers', type=str, default='3,2,1', help='num of stack encoder layers')
 parser.add_argument('--d_ff', type=int, default=2048, help='dimension of fcn')  # 原来是2048                    需要调优
@@ -111,7 +113,7 @@ data_parser = {
     'ETTh1': {'data': 'ETTh1.csv', 'T': 'OT', 'M': [7, 7, 7], 'S': [1, 1, 1], 'MS': [7, 7, 1]},
     'WTH': {'data': 'WTH.csv', 'T': 'WetBulbCelsius', 'M': [12, 12, 12], 'S': [1, 1, 1], 'MS': [12, 12, 1]},
     'DWT13-20': {'data': 'DWT13-20.csv', 'T': 'ind', 'M': [10, 10, 10], 'S': [1, 1, 1], 'MS': [10, 10, 1]},
-    'ind13-20-day':{'data': 'ind13-20-day.csv', 'T': 'ind', 'M': [10, 10, 10], 'S': [1, 1, 1], 'MS': [10, 10, 1]},
+    'ind13-20-day': {'data': 'ind13-20-day.csv', 'T': 'ind', 'M': [10, 10, 10], 'S': [1, 1, 1], 'MS': [10, 10, 1]},
 }
 
 if args.data in data_parser.keys():
@@ -129,16 +131,25 @@ args.freq = args.freq[-1:]
 
 Exp = Exp_Informer
 
-def test_informer(config):
+def predict_DWT_informer(config):
     initModelData(config)
+    name = config['file_info']['name']
+    path = os.path.normpath(f"{root}/opt/{name}-DWT/")
+    getDWTRes(f"{path}{name}.csv", name)
+
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
                .format(args.model, args.data, args.features, args.seq_len, args.label_len,
                        args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
                        args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des0, 0))
 
+    args.root_path = path
+    args.data_path = name + '-DWT.csv'
+    args.target = 'ind'
+    args.data = name
+
     exp = Exp(args)
 
     print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-    exp.predict(setting, config.model,True)
+    exp.predict(setting, config['model'], config['file_info']['name'], True)
     return

@@ -31,6 +31,7 @@ def setup_seed(seed):
 setup_seed(415)
 
 from methods import initModelData
+from DWT import getDWTRes
 from exp.exp_informer import Exp_Informer
 
 parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecasting')
@@ -177,10 +178,12 @@ def train():
 
 def train_DWT_informer(config):
     initModelData(config)
-
     name = config['file_info']['name']
-    args.root_path = root + '/py-back/PyRun/Informer/data/'
-    args.data_path = name + '.csv'
+    path = os.path.normpath(f"{root}/opt/{name}-DWT/")
+    getDWTRes(f"{path}{name}.csv", name)
+
+    args.root_path = path
+    args.data_path = name + '-DWT.csv'
     args.target = 'ind'
     args.data = name
     args.train_epochs = config['model_config']['totalEpoch']

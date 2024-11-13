@@ -30,6 +30,23 @@
             </el-upload>
           </el-form-item>
         </div>
+        <el-form-item label="选取列">
+          <el-select v-model="formModel.cols" multiple placeholder="">
+            <el-option
+                v-for="item in columns"
+                :key="item"
+                :label="item"
+                :value="item"
+            >
+              <div class="flex items-center">
+                <el-tag type="info" size="small">{{ item }}</el-tag>
+              </div>
+            </el-option>
+            <template #tag>
+              <el-tag type="success" v-for="item in formModel.cols" :key="item">{{ item }}</el-tag>
+            </template>
+          </el-select>
+        </el-form-item>
         <el-form-item label="是否画图">
           <el-switch v-model="formModel.draw"></el-switch>
         </el-form-item>
@@ -103,6 +120,7 @@ import {generateInd} from "../../api/api.ts";
 const formModel = reactive({
   filePath: "",
   file: null,
+  cols: [],
   draw: false,
   drawThreshold: null,
   drawStyle: "common",
@@ -137,6 +155,7 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
 
 let fileData;
 let file;
+const columns = ref([]);
 
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
@@ -156,6 +175,7 @@ const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
       // console.log("解析结果:", results.data);
       // 在这里处理解析后的内容
       fileData = results.data;
+      columns.value = Object.keys(fileData[0]);
     },
   });
 };
@@ -164,6 +184,7 @@ const reset = ref(false);
 const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
   if (uploadFiles.length === 0) {
     reset.value = true;
+    columns.value = [];
   }
 }
 

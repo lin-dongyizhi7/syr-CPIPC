@@ -64,8 +64,7 @@
       <div v-if="!reset">
         <div v-if="starting">预测中...</div>
         <div v-if="!starting && success && finished">
-          <div>预测完成</div>
-          <img width="600px" src="../../../public/output.png"/>
+          <div>预测完成，保存到opt目录下</div>
         </div>
       </div>
     </template>
@@ -169,6 +168,7 @@ const startPredictModel = () => {
     let name = paths.split('.')[0];
     startPredict({
       name: name,
+      type: 'path',
       filePath: formModel.filePath,
       model: formModel.model,
       drawStyle: formModel.drawStyle
@@ -179,6 +179,7 @@ const startPredictModel = () => {
   } else {
     startPredict({
       name: file.name.split('.')[0],
+      type: 'file',
       data: fileData,
       model: formModel.model,
       drawStyle: formModel.drawStyle

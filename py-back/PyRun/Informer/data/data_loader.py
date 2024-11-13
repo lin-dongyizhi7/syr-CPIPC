@@ -339,7 +339,7 @@ class Dataset_Pred(Dataset):
             df_data = df_raw[[self.target]]
 
         if self.scale:
-            self.scaler.fit(df_data.values[:len(df_raw) - num_test+1])#改,结果和未改时一样，改错了，没啥用，预测可能要改回来
+            self.scaler.fit(df_data.values)
             data = self.scaler.transform(df_data.values)
         else:
             data = df_data.values

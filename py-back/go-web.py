@@ -67,18 +67,16 @@ def predict():
     data = json.loads(request.data)  # 将json字符串转为dict
     params = {
         'model': data['model'],
-        'model_config': {
-            'totalEpoch': data['totalEpoch'],
-            'batchSize': data['batchSize'],
-        },
         'file_info': {
+            'type': data['type'],
             'name': data['name'],
             'path': data['filePath'] if 'filePath' in data else '',
         },
         'draw_config': {
             'drawStyle': data['drawStyle'],
         },
-        'data': data['data'] if 'data' in data else ''
+        'data': data['data'] if 'data' in data else '',
+        'output': ''
     }
     runner.loadPredictParams(params)
     isOk = runner.predict()

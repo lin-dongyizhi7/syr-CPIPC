@@ -179,7 +179,7 @@ def train_informer(config):
     initModelData(config)
 
     name = config['file_info']['name']
-    args.root_path = root + '/py-back/PyRun/Informer/data/'
+    args.root_path = os.path.normpath(f"{root}/opt/{name}/")
     args.data_path = name + '.csv'
     args.target = 'ind'
     args.data = name

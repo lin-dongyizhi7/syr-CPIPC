@@ -99,3 +99,14 @@ def train_lstm(params):
     # plot_results_multiple(predictions_multiseq, y_test, configs['data']['sequence_length'])
     # plot_results_train(predictions_pointbypoint, y_train)
 
+    # 测试结果
+    x_test, y_test = data.get_test_data(
+        seq_len=configs['data']['sequence_length'],
+        normalise=configs['data']['normalise']
+    )
+    predictions_pointbypoint = model.predict_point_by_point(x_test, debug=False)
+    MSE = metrics.mean_squared_error(y_test[:, 0], predictions_pointbypoint)
+    MAE = metrics.mean_absolute_error(y_test[:, 0], predictions_pointbypoint)
+    print('MSE_test', MSE)
+    print('MAE_test', MAE)
+

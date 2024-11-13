@@ -15,6 +15,8 @@ from torch.utils.data import DataLoader
 import os
 import time
 
+import matplotlib.pyplot as plt
+
 # 获取项目根目录
 root = os.getenv('PROJECT_ROOT')
 
@@ -63,104 +65,7 @@ class Exp_Informer(Exp_Basic):
     def _get_data(self, flag):
         args = self.args
 
-        data_dict = {
-            'DWT13-20': Dataset_Custom,
-            'DWT13-20-1': Dataset_Custom,
-            'ind13-20-day':Dataset_Custom,
-            "DWT13-20_shuffled_C_1_1": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_2": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_3": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_4": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_5": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_6": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_7": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_8": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_9": Dataset_Custom,
-            "DWT13-20_shuffled_C_1_10": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_1": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_2": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_3": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_4": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_5": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_6": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_7": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_8": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_9": Dataset_Custom,
-            "DWT13-20_shuffled_C_2_10": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_1": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_2": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_3": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_4": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_5": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_6": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_7": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_8": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_9": Dataset_Custom,
-            "DWT13-20_shuffled_C_3_10": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_1": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_2": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_3": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_4": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_5": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_6": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_7": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_8": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_9": Dataset_Custom,
-            "DWT13-20_shuffled_D_1_10": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_1": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_2": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_3": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_4": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_5": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_6": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_7": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_8": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_9": Dataset_Custom,
-            "DWT13-20_shuffled_D_2_10": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_1": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_2": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_3": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_4": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_5": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_6": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_7": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_8": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_9": Dataset_Custom,
-            "DWT13-20_shuffled_E_1_10": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_1": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_2": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_3": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_4": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_5": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_6": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_7": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_8": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_9": Dataset_Custom,
-            "DWT13-20_shuffled_E_2_10": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_1": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_2": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_3": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_4": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_5": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_6": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_7": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_8": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_9": Dataset_Custom,
-            "DWT13-20_shuffled_E_3_10": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_1": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_2": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_3": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_4": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_5": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_6": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_7": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_8": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_9": Dataset_Custom,
-            "DWT13-20_shuffled_F_3_10": Dataset_Custom,
-
-            
-        }
-        Data = data_dict[self.args.data]
+        Data = Dataset_Custom
         timeenc = 0 if args.embed!='timeF' else 1
 
         if flag == 'test':
@@ -226,9 +131,7 @@ class Exp_Informer(Exp_Basic):
         test_data, test_loader = self._get_data(flag = 'test')
 
         path = os.path.join(self.args.checkpoints, setting)
-        print(path)
         path = root + '/models/' + self.args.data
-        print(path)
         if not os.path.exists(path):
             os.makedirs(path)
 
@@ -288,7 +191,7 @@ class Exp_Informer(Exp_Basic):
 
             adjust_learning_rate(model_optim, epoch+1, self.args)
             
-        best_model_path = path+'/'+'checkpoint.pth'
+        best_model_path = path + '/' + 'checkpoint.pth'
         self.model.load_state_dict(torch.load(os.path.normpath(best_model_path)))
         
         return self.model
@@ -465,7 +368,7 @@ class Exp_Informer(Exp_Basic):
 
         return mse
 
-    def predict(self, setting, path, load=False):
+    def predict(self, setting, path, name, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
         
         if load:
@@ -484,11 +387,31 @@ class Exp_Informer(Exp_Basic):
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
         # result save
-        folder_path = './results/' + setting +'/'
+        folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
-        np.save(folder_path+'real_prediction.npy', preds)
+        np.save(folder_path + 'real_prediction.npy', preds)
+
+        # 提取第一个特征的预测值
+        feature_index = 0  # 假设我们要绘制第一个特征
+        time_steps = np.arange(preds.shape[1])
+
+        # 创建图形对象
+        plt.figure(figsize=(10, 6))
+
+        # 绘制每个样本的第一个特征的预测值
+        for i in range(preds.shape[0]):
+            plt.plot(time_steps, preds[i, :, feature_index], label=f'Sample {i + 1}')
+
+        # 添加标题和标签
+        plt.title('Prediction Curve for Feature 1')
+        plt.xlabel('Time Step')
+        plt.ylabel('Prediction Data')
+        plt.legend()
+
+        # 显示图形
+        plt.savefig(folder_path + 'prediction_res.png')
         
         return
 

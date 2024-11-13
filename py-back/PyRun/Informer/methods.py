@@ -7,9 +7,14 @@ from pathlib import Path
 root = os.getenv('PROJECT_ROOT')
 
 def initModelData(config):
+    name = config['file_info']['name']
+    path = f"{root}/opt/{name}/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     if config['file_info']['type'] == 'file':
         df = pd.DataFrame(config['data'])
-        df.to_csv(f"{root}/opt/{config['file_info']['name']}-ind.csv")
+        df.to_csv(f"{path}{name}.csv")
     else:
         path = config['file_info']['path']
         file_extension = Path(path).suffix.lower()
@@ -21,4 +26,4 @@ def initModelData(config):
             df = pd.read_excel(path)
         else:
             raise ValueError(f"Unsupported file extension: {file_extension}")
-        df.to_csv(f"{root}/opt/{config['file_info']['name']}-ind.csv")
+        df.to_csv(f"{path}{name}.csv")

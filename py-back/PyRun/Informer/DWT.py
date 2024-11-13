@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+from pywt import wavedec
+from pywt import idwt
+
+import os
+
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
+
+def DWT(X, cols, wavelet, level):
+    for i in cols:
+        if i == 'ind':
+            break
+        for j in range(level):
+            coeffs = wavedec(X[i],wavelet,level=1)
+            m = idwt(coeffs[0], None, wavelet, 'smooth')
+            if len(m) == len(X):
+                X[i] = m
+            else:
+                X[i] = m[:len(X)]
+    return X#定义小波分解函数
+
+def getDWTRes(file, name):
+    df = pd.read_csv(file)  # 导入数据
+    DWT(df, df.columns.tolist(), 'sym4', 4)
+    df['date'] = df['date'].astype('datetime64[ns]')  # 转化时间格式
+    df = df.set_index('date')  # 设置时间索引
+    df.to_csv(os.path.normpath(f"{root}/opt/{name}-DWT/{name}-DWT.csv"))
+
