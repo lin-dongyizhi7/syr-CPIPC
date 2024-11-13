@@ -134,8 +134,8 @@ Exp = Exp_Informer
 def predict_DWT_informer(config):
     initModelData(config)
     name = config['file_info']['name']
-    path = os.path.normpath(f"{root}/opt/{name}-DWT/")
-    getDWTRes(f"{path}{name}.csv", name)
+    path = os.path.normpath(f"{root}/opt/{name}/")
+    getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
 
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
@@ -146,7 +146,7 @@ def predict_DWT_informer(config):
     args.root_path = path
     args.data_path = name + '-DWT.csv'
     args.target = 'ind'
-    args.data = name
+    args.data = name + '-DWT'
 
     exp = Exp(args)
 

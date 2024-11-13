@@ -5,13 +5,10 @@ from sklearn.preprocessing import StandardScaler  # 标准化工具
 
 class DataLoader():
 
-    def __init__(self, filename, data, split, cols):
-        if filename:
-            dataframe = pd.read_csv(filename)
-        else:
-            dataframe = pd.DataFrame(data)
+    def __init__(self, filename, data, split):
+        dataframe = pd.read_csv(filename) if filename else pd.DataFrame(data)
         i_split = int(len(dataframe) * split)
-        cols = dataframe.drop(columns=[dataframe.index.name]).columns.tolist()
+        cols = dataframe.columns.tolist()[1:]
         self.data_full = dataframe.get(cols).values
         self.data_train = dataframe.get(cols).values[:i_split]
         self.data_test = dataframe.get(cols).values[i_split:]

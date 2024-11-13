@@ -33,10 +33,13 @@ def predict_lstm(params):
     name = params['file_info']['name']
     # 指定模型文件路径
     model_path = params['model']
+    model = Model()
     # 加载模型
-    model = load_model(model_path)
+    model.load_model(model_path)
+
     # 打印模型摘要
-    model.summary()
+    m = load_model(model_path)
+    m.summary()
 
     # 读取所需参数
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -70,11 +73,11 @@ def predict_lstm(params):
         os.makedirs(folder_path)
 
     # 保存npy文件
-    np.save(folder_path + 'real_prediction.npy', predictions)
+    np.save(os.path.normpath(folder_path + '/real_prediction_lstm.npy'), predictions)
     # 保存绘图
     fig = plt.figure(facecolor='white')
     ax = fig.add_subplot(111)
     ax.plot(predictions, label='Prediction Data')
-    plt.savefig(folder_path + 'prediction_res.png')
+    plt.savefig(os.path.normpath(folder_path + '/prediction_res_lstm.png'))
 
     return True

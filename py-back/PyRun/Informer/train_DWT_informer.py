@@ -179,13 +179,13 @@ def train():
 def train_DWT_informer(config):
     initModelData(config)
     name = config['file_info']['name']
-    path = os.path.normpath(f"{root}/opt/{name}-DWT/")
-    getDWTRes(f"{path}{name}.csv", name)
+    path = os.path.normpath(f"{root}/opt/{name}/")
+    getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
 
     args.root_path = path
     args.data_path = name + '-DWT.csv'
     args.target = 'ind'
-    args.data = name
+    args.data = name + '-DWT'
     args.train_epochs = config['model_config']['totalEpoch']
     args.batch_size = config['model_config']['batchSize']
     args.gpu = config['model_config']['gpu']

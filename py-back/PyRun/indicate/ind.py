@@ -140,7 +140,7 @@ def generateInd(init_data):
     EW = pd.concat([EW, pd.DataFrame(columns=['ind'])], sort=False)
     INDEX(EW, 0.93)
 
-    EW.to_excel(os.path.normpath(f"{root}/opt/{name}-ind.xlsx"))
+    EW.to_csv(os.path.normpath(f"{root}/opt/{name}-ind.csv"), index=False)
 
     ind_col = EW.loc[:, "ind"]
     mean = ind_col.mean()

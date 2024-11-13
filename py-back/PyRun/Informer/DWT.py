@@ -23,8 +23,13 @@ def DWT(X, cols, wavelet, level):
 
 def getDWTRes(file, name):
     df = pd.read_csv(file)  # 导入数据
-    DWT(df, df.columns.tolist(), 'sym4', 4)
+    DWT(df, df.columns.tolist()[1:], 'sym4', 4)
     df['date'] = df['date'].astype('datetime64[ns]')  # 转化时间格式
     df = df.set_index('date')  # 设置时间索引
-    df.to_csv(os.path.normpath(f"{root}/opt/{name}-DWT/{name}-DWT.csv"))
+
+    path = f"{root}/opt/{name}"
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    df.to_csv(os.path.normpath(f"{path}/{name}-DWT.csv"), index=False)
 
