@@ -14,6 +14,9 @@ import os
 project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(project_root)
 
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
+
 from core.data_processor import DataLoader
 from core.model import Model
 
@@ -37,20 +40,29 @@ def plot_results_train(predicted_data, true_data):
     plt.savefig('results_train.png')
 
 #RNN时间序列
-def train_lstm(config):
+def train_lstm(params):
     #读取所需参数
-    configs = json.load(open('config.json', 'r'))
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 构建 params.json 文件的完整路径
+    config_path = os.path.join(current_dir, 'config.json')
+    configs = json.load(open(config_path, 'r'))
     if not os.path.exists(configs['model']['save_dir']): os.makedirs(configs['model']['save_dir'])
     #读取数据
-    data = DataLoader(
-        os.path.join('data', configs['data']['filename']),
-        configs['data']['train_test_split'],
-        configs['data']['columns']
-    )
+    if params['file_info']['type'] == 'path':
+        data = DataLoader(
+            params['file_info']['path'],
+            None,
+            configs['data']['train_test_split'],
+        )
+    else:
+        data = DataLoader(
+            None,
+            params['data'],
+            configs['data']['train_test_split'],
+        )
     #创建RNN模型
     model = Model()
     mymodel = model.build_model(configs)
-
     # plot_model(mymodel, to_file='model.png',show_shapes=True)
 
     #加载训练数据
@@ -65,9 +77,9 @@ def train_lstm(config):
     model.train(
 		x,
 		y,
-		epochs = configs['training']['epochs'],
-		batch_size = configs['training']['batch_size'],
-		save_dir = configs['model']['save_dir'],
+		epochs = params['model_config']['totalEpoch'],
+		batch_size = params['model_config']['batchSize'],
+		save_dir = os.path.normpath(f"{root}/models/{params['file_info']['name']}-lstm"),
         validation_split =configs['model']["validation_split"]#修改
 	)
    #训练结果
@@ -85,5 +97,5 @@ def train_lstm(config):
     print('train_MSE', MSE)
     print('train_MAE', MAE)
     # plot_results_multiple(predictions_multiseq, y_test, configs['data']['sequence_length'])
-    plot_results_train(predictions_pointbypoint, y_train)
+    # plot_results_train(predictions_pointbypoint, y_train)
 
