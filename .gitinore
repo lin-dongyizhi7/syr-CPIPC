@@ -24,5 +24,8 @@ __pycache__/
 dist/
 build/
 
+# 忽略模型文件
+.pth
+
 # 忽略虚拟环境
 venv/

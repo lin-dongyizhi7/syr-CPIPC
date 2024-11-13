@@ -180,7 +180,7 @@ def train_DWT_informer(config):
 
     name = config['file_info']['name']
     args.root_path = root + '/py-back/PyRun/Informer/data/'
-    args.data_path = name +'.csv'
+    args.data_path = name + '.csv'
     args.target = 'ind'
     args.data = name
     args.train_epochs = config['model_config']['totalEpoch']
@@ -192,9 +192,6 @@ def train_DWT_informer(config):
 
     try:
         train()
-        # 保存模型
-        torch.save(model.state_dict(), f'{root}/model/{name}/informer_model.pth')
-        print("Model has been saved to informer_model.pth")
         return True
     except Exception as e:
         print(e)

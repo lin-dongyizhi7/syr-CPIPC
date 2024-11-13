@@ -73,11 +73,19 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="训练" :reset="reset" @start="startTrainModel" @success="success = true"></opt-btn-progress>
+      <opt-btn-progress
+          opt-name="训练"
+          :disbled="!formModel.file && !formModel.filePath"
+          :reset="reset"
+          @start="startTrainModel"
+          @success="success = true">
+      </opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="starting">训练中</div>
-      <div v-if="success && finished">训练完成</div>
+      <div v-if="!reset">
+        <div v-if="starting">训练中...</div>
+        <div v-if="!starting && success && finished">训练完成</div>
+      </div>
     </template>
   </page>
 </template>

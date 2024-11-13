@@ -15,6 +15,9 @@ from torch.utils.data import DataLoader
 import os
 import time
 
+# 获取项目根目录
+root = os.getenv('PROJECT_ROOT')
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -223,6 +226,9 @@ class Exp_Informer(Exp_Basic):
         test_data, test_loader = self._get_data(flag = 'test')
 
         path = os.path.join(self.args.checkpoints, setting)
+        print(path)
+        path = root + '/models/' + self.args.data
+        print(path)
         if not os.path.exists(path):
             os.makedirs(path)
 

@@ -25,6 +25,15 @@
               <div class="el-upload__tip">小于10MB的csv/xlsx/xls文件</div>
             </el-upload>
           </el-form-item>
+          <el-form-item label="选择模型" label-position="left" prop="filePath">
+            <el-select placeholder="" v-model="formModel.model">
+              <el-option v-for="item in models" :label="item" :value="item">
+              </el-option>
+              <template #label="{ label, value }">
+                <span style="font-size: 12px">{{ transPath(label) }}</span>
+              </template>
+            </el-select>
+          </el-form-item>
           <el-form-item label="画图风格">
             <el-select v-model="formModel.drawStyle">
               <el-option v-for="item in styles" :label="item.label" :value="item.value">
@@ -38,20 +47,28 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="预测" :reset="reset" @start="startPredictModel" @success="success = true"></opt-btn-progress>
+      <opt-btn-progress
+          opt-name="预测"
+          :disbled="!formModel.file && !formModel.filePath"
+          :reset="reset"
+          @start="startPredictModel"
+          @success="success = true">
+      </opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="starting">预测中</div>
-      <div v-if="success && finished">
-        <div>预测完成</div>
-        <img width="600px" src="../../../public/output.png" />
+      <div v-if="!reset">
+        <div v-if="starting">预测中...</div>
+        <div v-if="!starting && success && finished">
+          <div>预测完成</div>
+          <img width="600px" src="../../../public/output.png" />
+        </div>
       </div>
     </template>
   </page>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import {ref, reactive, onMounted} from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
 import type { UploadProps, UploadFile } from "element-plus";
 import { ElMessage } from "element-plus";
@@ -63,18 +80,32 @@ import ColorStyle from "../../components/color-style.vue";
 
 import { styles } from "../../enum/options";
 
-import {startPredict, startTrain} from "../../api/api.ts";
+import {startPredict, getModelsList} from "../../api/api.ts";
 
 const formModel = reactive({
   filePath: "",
   file: null,
+  model: '',
   drawStyle: "common",
 });
 const formRef = ref();
 
 const formRules = {
   //   filePath: [{ required: true, message: "未上传文件" }],
+  model: [{ required: true, message: "未上传文件" }]
 };
+
+const models = ref([]);
+
+onMounted(async()=>{
+  let res = await getModelsList();
+  models.value = res.data;
+});
+
+function transPath(path) {
+    // 获取最后两个部分
+    return path.split('\\').slice(-2).join('\\');
+}
 
 const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   if (
@@ -125,6 +156,7 @@ const startPredictModel = () => {
     startPredict({
       name: name,
       filePath: formModel.filePath,
+      model: formModel.model,
       drawStyle: formModel.drawStyle
     }).then((results: any) => {
       finished.value = true;
@@ -134,6 +166,7 @@ const startPredictModel = () => {
     startPredict({
       name: file.name.split('.')[0],
       data: fileData,
+      model: formModel.model,
       drawStyle: formModel.drawStyle
     }).then((results: any) => {
       finished.value = true;

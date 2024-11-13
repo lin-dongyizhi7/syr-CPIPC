@@ -59,11 +59,19 @@
       </el-form>
     </template>
     <template #process>
-      <opt-btn-progress opt-name="构造" :reset="reset" @start="startGenerateInd" @success="success = true"></opt-btn-progress>
+      <opt-btn-progress
+          opt-name="构造"
+          :disbled="!formModel.file && !formModel.filePath"
+          :reset="reset"
+          @start="startGenerateInd"
+          @success="success = true">
+      </opt-btn-progress>
     </template>
     <template #output>
-      <div v-if="starting">构造中</div>
-      <div v-if="success && finished">构造成功，保存到opt目录下</div>
+      <div v-if="!reset">
+        <div v-if="starting">构造中...</div>
+        <div v-if="!starting && success && finished">构造成功，保存到opt目录下</div>
+      </div>
     </template>
   </page>
   <el-dialog v-model="showAddStyle" title="自定义风格">

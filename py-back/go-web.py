@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 
 project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
@@ -31,7 +32,7 @@ runner = Runner()
 print('start----------')
 
 # 编写视图函数，绑定路由
-@app.route("/generateInd", methods=["POST"])  # 查询（全部）
+@app.route("/generateInd", methods=["POST"])  # 构造指标
 def generateInd():
     data = json.loads(request.data)
     runner.loadIndData(data)
@@ -39,7 +40,7 @@ def generateInd():
     return JsonResponse.success(msg='查询成功', data=result)
 
 
-@app.route("/train", methods=["POST"])  # 添加（单个）
+@app.route("/train", methods=["POST"])  # 训练
 def train():
     data = json.loads(request.data)  # 将json字符串转为dict
     params = {
@@ -61,7 +62,7 @@ def train():
     return JsonResponse.success(msg='训练成功') if isOk else JsonResponse.fail(msg='训练失败')
 
 
-@app.route("/predict", methods=["POST"])  # 修改（单个）
+@app.route("/predict", methods=["POST"])  # 预测
 def predict():
     data = json.loads(request.data)  # 将json字符串转为dict
     params = {
@@ -83,7 +84,16 @@ def predict():
     isOk = runner.predict()
     return JsonResponse.success(msg='预测成功') if isOk else JsonResponse.fail(msg='预测失败')
 
-
+@app.route("/getModelsList", methods=["GET"])
+def getModelsList():
+    pth_files = []
+    result = []
+    # 使用 glob 模块递归查找所有 .pth 文件
+    for dir_path, _, _ in os.walk(project_root + '/models'):
+        pth_files.extend(glob.glob(os.path.join(dir_path, '*.pth')))
+    for pth in pth_files:
+        result.append(pth.replace('/', '\\'))
+    return JsonResponse.success(msg='模型列表查询成功', data=result)
 
 # 运行flask：默认是5000端口，此处设置端口为666
 if __name__ == '__main__':

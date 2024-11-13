@@ -1,9 +1,9 @@
 <template>
   <div v-if="!processing" class="start">
-    <el-button @click="startProcess">{{ optName }}</el-button>
+    <el-button :disabled="disabled" @click="startProcess">{{ optName }}</el-button>
   </div>
   <div v-else class="py-progress">
-    <el-progress :percentage="percentage" :show-text="false" striped></el-progress>
+    <el-progress :percentage="percentage" :show-text="false" striped-flow :duration="10" striped></el-progress>
   </div>
 </template>
 
@@ -15,6 +15,9 @@ const props = defineProps({
     type: String,
   },
   reset: {
+    type: Boolean,
+  },
+  disabled: {
     type: Boolean,
   }
 });

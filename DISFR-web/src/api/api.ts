@@ -26,3 +26,11 @@ export const startPredict = (data) => {
     data
   });
 }
+
+// 获取模型列表
+export const getModelsList = (data) => {
+  return request({
+    url: baseUrl + '/getModelsList',
+    method: "get"
+  });
+}
