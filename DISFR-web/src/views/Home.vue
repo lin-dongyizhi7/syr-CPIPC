@@ -3,15 +3,15 @@
     <div class="title">
       <h2>系统性金融风险预测</h2>
     </div>
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" @tab-change="handleChange">
       <el-tab-pane label="指标构建">
         <index-struct></index-struct>
       </el-tab-pane>
       <el-tab-pane label="模型训练">
-        <train-page></train-page>
+        <train-page v-if="activeTab === '1'"></train-page>
       </el-tab-pane>
       <el-tab-pane label="风险预测">
-        <predict-page></predict-page>
+        <predict-page v-if="activeTab === '2'"></predict-page>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -28,6 +28,10 @@ import i18n from "../i18n/index";
 // const t = i18n()
 
 const activeTab = ref(0);
+
+const handleChange = (name) => {
+  activeTab.value = name;
+};
 </script>
 
 <style scoped lang="less">

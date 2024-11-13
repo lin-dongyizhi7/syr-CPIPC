@@ -6,21 +6,25 @@
           <div class="info-tip">下面两种方式二选一即可</div>
           <el-form-item label="输入待处理文件夹路径" label-position="top" prop="filePath">
             <el-input
-              v-model="formModel.filePath"
-              placeholder="C:\Users\Desktop\my-files"
+                v-model="formModel.filePath"
+                placeholder="C:\Users\Desktop\my-files"
             ></el-input>
           </el-form-item>
           <el-form-item label="" label-position="top">
             <el-upload
-              class="upload-file"
-              drag
-              :http-request="uploadRequest"
-              :before-upload="handleBeforeUpload"
-              :on-change="handleOnChange"
-              :on-remove="handleOnRemove"
-              multiple
+                ref="upload"
+                class="upload-file"
+                drag
+                :limit="1"
+                :http-request="uploadRequest"
+                :before-upload="handleBeforeUpload"
+                :on-change="handleOnChange"
+                :on-remove="handleOnRemove"
+                :on-exceed="handleExceed"
             >
-              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <el-icon class="el-icon--upload">
+                <upload-filled/>
+              </el-icon>
               <div class="el-upload__text">拖拽文件到此处 或者 <em>点击此处</em></div>
               <div class="el-upload__tip">小于10MB的csv/xlsx/xls文件</div>
             </el-upload>
@@ -31,11 +35,11 @@
         </el-form-item>
         <el-form-item v-if="formModel.draw" label="风险阈值">
           <el-select
-            filterable
-            allow-create
-            default-first-option
-            placeholder="自定义输入"
-            v-model="formModel.drawThreshold"
+              filterable
+              allow-create
+              default-first-option
+              placeholder="自定义输入"
+              v-model="formModel.drawThreshold"
           >
             <el-option label="默认" value="default"></el-option>
             <el-option label="不设置阈值" value="none"></el-option>
@@ -48,7 +52,8 @@
             </template>
             <el-option v-for="item in styles" :label="item.label" :value="item.value">
               <div style="display: flex; align-items: center">
-                <color-style :colors="item.colors"></color-style> {{ item.label }}
+                <color-style :colors="item.colors"></color-style>
+                {{ item.label }}
               </div>
             </el-option>
           </el-select>
@@ -80,10 +85,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { UploadFilled } from "@element-plus/icons-vue";
-import type { UploadProps, UploadFile } from "element-plus";
-import { ElMessage } from "element-plus";
+import {ref, reactive} from "vue";
+import {UploadFilled} from "@element-plus/icons-vue";
+import type {UploadProps, UploadFile} from "element-plus";
+import {ElMessage} from "element-plus";
 import Papa from "papaparse";
 
 import Page from "../page.vue";
@@ -91,7 +96,7 @@ import OptBtnProgress from "../../components/opt-btn-progress.vue";
 import ColorStyle from "../../components/color-style.vue";
 import addStyle from "../../components/add-style.vue";
 
-import { styles } from "../../enum/options";
+import {styles} from "../../enum/options";
 
 import {generateInd} from "../../api/api.ts";
 
@@ -117,9 +122,9 @@ const saveStyle = () => {
 const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   // console.log(rawFile);
   if (
-    rawFile.type.endsWith("csv") &&
-    rawFile.type.endsWith("xlsx") &&
-    rawFile.type.endsWith("xls")
+      rawFile.type.endsWith("csv") &&
+      rawFile.type.endsWith("xlsx") &&
+      rawFile.type.endsWith("xls")
   ) {
     ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
@@ -132,6 +137,14 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
 
 let fileData;
 let file;
+
+const upload = ref<UploadInstance>()
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value!.handleStart(file)
+}
 
 const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
   file = uploadFile;
@@ -154,7 +167,8 @@ const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
   }
 }
 
-const uploadRequest = () => {};
+const uploadRequest = () => {
+};
 
 const startGenerateInd = () => {
   starting.value = true;

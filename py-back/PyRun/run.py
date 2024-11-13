@@ -20,15 +20,15 @@ from LSTM.test_lstm import test_lstm
 train_map = {
     'DWT-Informer': train_DWT_informer,
     'Informer': train_informer,
-    'GRU-Informer': train_gru,
-    'LSTM-Informer': train_lstm,
+    'GRU': train_gru,
+    'LSTM': train_lstm,
 }
 
 test_map = {
     'DWT-Informer': test_DWT_informer,
     'Informer': test_informer,
-    'GRU-Informer': test_gru,
-    'LSTM-Informer': test_lstm,
+    'GRU': test_gru,
+    'LSTM': test_lstm,
 }
 
 class Runner:

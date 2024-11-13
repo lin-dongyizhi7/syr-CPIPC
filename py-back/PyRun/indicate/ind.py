@@ -44,11 +44,7 @@ def ICDF(X):
         for j in range(len(X)-i):
             if X[-i] < X[j]:
                 a = a+1
-                #print(a)
-        #print(1 - a/(len(X)-i+1))
         X.iloc[-i] = 1 - a/(len(X)-i+1)#直接计算
-        #print(X[-i])
-    #print(X)
     return X
 
 def INDEX(X,lam):
@@ -144,7 +140,7 @@ def generateInd(init_data):
     EW = pd.concat([EW, pd.DataFrame(columns=['ind'])], sort=False)
     INDEX(EW, 0.93)
 
-    EW.to_excel(f"{root}/opt/{name}-ind.xlsx")
+    EW.to_excel(os.path.normpath(f"{root}/opt/{name}-ind.xlsx"))
 
     ind_col = EW.loc[:, "ind"]
     mean = ind_col.mean()
@@ -157,7 +153,7 @@ def generateInd(init_data):
     ind_col.plot(x_compat=True, figsize=(20, 10))
     matplotlib.pyplot.axhline(a)
     plt.ylabel("ind")
-    plt.savefig(f"{root}/opt/{name}-ind.png")
+    plt.savefig(os.path.normpath(f"{root}/opt/{name}-ind.png"))
     plt.show()
 
     result = {'info': 'success'}

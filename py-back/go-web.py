@@ -90,7 +90,8 @@ def getModelsList():
     result = []
     # 使用 glob 模块递归查找所有 .pth 文件
     for dir_path, _, _ in os.walk(project_root + '/models'):
-        pth_files.extend(glob.glob(os.path.join(dir_path, '*.pth')))
+        for ext in ['*.pth', '*.h5']:
+            pth_files.extend(glob.glob(os.path.join(dir_path, ext)))
     for pth in pth_files:
         result.append(pth.replace('/', '\\'))
     return JsonResponse.success(msg='模型列表查询成功', data=result)
