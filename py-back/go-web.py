@@ -24,6 +24,8 @@ import json
 
 from art import text2art
 
+# pipreqs生成使用到的包的requirements.txt
+
 # 艺术字
 art_text_1 = text2art(f"YZP AND SYR", font='slant')
 print(art_text_1)
