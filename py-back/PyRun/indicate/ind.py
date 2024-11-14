@@ -113,7 +113,8 @@ def generateInd(init_data):
 
     start_day = '2018-01-01'
     con1 = data.index < start_day
-    header = data[con1]
+    head_len = int(len(data) * 2 / 3)
+    header = data[:head_len]
 
     # 前面的数据做CDF
     b = []

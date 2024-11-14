@@ -132,7 +132,7 @@ let file;
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
   upload.value!.clearFiles()
-  const file = files[0] as UploadRawFile
+  const file = files[0]
   file.uid = genFileId()
   upload.value!.handleStart(file)
 }
