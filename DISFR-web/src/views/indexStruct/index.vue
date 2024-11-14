@@ -92,8 +92,8 @@
     <template #output>
       <div v-if="!reset">
         <div v-if="starting">构造中...</div>
-        <div v-if="!starting && success && finished">构造成功，保存到opt目录下</div>
       </div>
+      <div v-if="!starting && success && finished">构造成功，保存到opt目录下</div>
     </template>
   </page>
   <el-dialog v-model="showAddStyle" title="自定义风格">
@@ -205,6 +205,7 @@ const startGenerateInd = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   } else {
     generateInd({
@@ -217,6 +218,7 @@ const startGenerateInd = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   }
 }

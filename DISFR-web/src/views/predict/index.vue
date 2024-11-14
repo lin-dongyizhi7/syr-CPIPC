@@ -30,7 +30,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="选择模型" label-position="left" prop="filePath">
-            <el-select placeholder="" v-model="formModel.model">
+            <el-select @focus="getModels" placeholder="" v-model="formModel.model">
               <el-option v-for="item in models" :label="item" :value="item">
               </el-option>
               <template #label="{ label, value }">
@@ -42,7 +42,7 @@
             <el-input-number
                 v-model="formModel.pred_len"
                 :step="1"
-                :min="2"
+                :min="1"
                 :max="1000"
                 show-input
                 size="small"
@@ -73,10 +73,10 @@
     <template #output>
       <div v-if="!reset">
         <div v-if="starting">预测中...</div>
-        <div v-if="!starting && success && finished">
+      </div>
+      <div v-if="!starting && success && finished">
           <div>预测完成，保存到opt目录下</div>
         </div>
-      </div>
     </template>
   </page>
 </template>
@@ -113,9 +113,13 @@ const formRules = {
 const models = ref([]);
 
 onMounted(async () => {
+  await getModels();
+});
+
+const getModels = async () => {
   let res = await getModelsList();
   models.value = res.data;
-});
+};
 
 function transPath(path) {
   // 获取最后两个部分
@@ -190,6 +194,7 @@ const startPredictModel = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   } else {
     startPredict({
@@ -200,6 +205,7 @@ const startPredictModel = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   }
 };

@@ -7,6 +7,7 @@ import json
 import time
 import math
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 import sys
 import os
@@ -66,18 +67,28 @@ def predict_lstm(params):
         normalise=configs['data']['normalise']
     )
 
-    predictions = model.predict_point_by_point(x, debug=False)
+    pre_len = params['pred_len']
+
+    predictions = model.predict_sequences_multiple(x, 16, pre_len,debug=False)
     # result save
     folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
     # 保存npy文件
-    np.save(os.path.normpath(folder_path + '/prediction_lstm.npy'), predictions)
+    res_file = os.path.normpath(folder_path + f"/prediction_{pre_len}_lstm.npy")
+    np.save(res_file, predictions)
+    print('save result file:' + res_file)
     # 保存绘图
     fig = plt.figure(facecolor='white')
     ax = fig.add_subplot(111)
-    ax.plot(predictions, label='Prediction Data')
-    plt.savefig(os.path.normpath(folder_path + '/prediction_lstm.png'))
-
+    pre_x = np.arange(1, pre_len + 1)
+    ax.plot(pre_x, predictions, label='Prediction Data')
+    # 设置横轴刻度为整数
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(int(pre_len/8)))
+    if pre_len <= 30:
+        ax.scatter(pre_x, predictions, marker='*')
+    res_picture = os.path.normpath(folder_path + f"/prediction_{pre_len}_lstm.png")
+    plt.savefig(res_picture)
+    print('save result picture:' + res_picture)
     return True

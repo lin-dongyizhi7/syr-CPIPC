@@ -88,8 +88,8 @@
     <template #output>
       <div v-if="!reset">
         <div v-if="starting">训练中...</div>
-        <div v-if="!starting && success && finished">训练完成</div>
       </div>
+      <div v-if="!starting && success && finished">训练完成</div>
     </template>
   </page>
 </template>
@@ -191,6 +191,7 @@ const startTrainModel = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   } else {
     startTrain({
@@ -201,6 +202,7 @@ const startTrainModel = () => {
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
+      reset.value = true;
     });
   }
 };

@@ -137,7 +137,8 @@ class Model():
 					curr_frame = curr_frame[1:]
 					curr_frame = np.insert(curr_frame, [window_size - 2], predicted[-1], axis=0)
 				prediction_seqs.append(predicted)
-			return prediction_seqs
+			return np.mean(np.array(prediction_seqs), axis=0)
+			# return prediction_seqs
 		else:
 			print('[Model] Predicting Sequences Multiple...')
 			prediction_seqs = []
