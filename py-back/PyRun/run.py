@@ -51,6 +51,7 @@ class Runner:
         self.output = None
         self.draw_config = None
         self.data = None
+        self.pred_len = 1
 
     def loadTrainParams(self, params):
         self.model = params['model']
@@ -64,6 +65,7 @@ class Runner:
         self.output = params['output']
         self.draw_config = params['draw_config']
         self.data = params['data']
+        self.pred_len = params['pred_len']
 
     def loadIndData(self, data):
         self.data = data
@@ -98,6 +100,7 @@ class Runner:
                 'data': self.data,
                 'output': self.output,
                 'draw_config': self.draw_config,
+                'pred_len': self.pred_len
             }
             predict_map[model_type](config)
 

@@ -142,6 +142,7 @@ def predict_DWT_informer(config):
     args.target = 'ind'
     args.data = name + '-DWT'
     args.cols = cols
+    args.pred_len = config['pred_len']
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
                .format(args.model, args.data, args.features, args.seq_len, args.label_len,
@@ -152,4 +153,4 @@ def predict_DWT_informer(config):
 
     print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
     exp.predict(setting, config['model'], config['file_info']['name'], True, True)
-    return
+    return True

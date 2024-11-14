@@ -68,16 +68,17 @@ def predict_gru(params):
     )
 
     predictions = model.predict_point_by_point(x, debug=False)
+    print(predictions)
     # result save
     folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
     # 保存npy文件
-    np.save(os.path.normpath(folder_path + '/real_prediction_gru.npy'), predictions)
+    np.save(os.path.normpath(folder_path + '/prediction_gru.npy'), predictions)
     # 保存绘图
     fig = plt.figure(facecolor='white')
     ax = fig.add_subplot(111)
     ax.plot(predictions, label='Prediction Data')
-    plt.savefig(os.path.normpath(folder_path + '/prediction_res_gru.png'))
+    plt.savefig(os.path.normpath(folder_path + '/prediction_gru.png'))
     return True

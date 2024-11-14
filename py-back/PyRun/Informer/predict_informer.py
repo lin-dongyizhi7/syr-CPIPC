@@ -137,6 +137,7 @@ def predict_informer(config):
     args.data_path = name + '.csv'
     args.target = 'ind'
     args.data = name
+    args.pred_len = config['pred_len']
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
                .format(args.model, args.data, args.features, args.seq_len, args.label_len,
@@ -147,4 +148,4 @@ def predict_informer(config):
 
     print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
     exp.predict(setting, config['model'], config['file_info']['name'], True)
-    return
+    return True

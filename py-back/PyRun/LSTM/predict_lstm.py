@@ -73,11 +73,11 @@ def predict_lstm(params):
         os.makedirs(folder_path)
 
     # 保存npy文件
-    np.save(os.path.normpath(folder_path + '/real_prediction_lstm.npy'), predictions)
+    np.save(os.path.normpath(folder_path + '/prediction_lstm.npy'), predictions)
     # 保存绘图
     fig = plt.figure(facecolor='white')
     ax = fig.add_subplot(111)
     ax.plot(predictions, label='Prediction Data')
-    plt.savefig(os.path.normpath(folder_path + '/prediction_res_lstm.png'))
+    plt.savefig(os.path.normpath(folder_path + '/prediction_lstm.png'))
 
     return True

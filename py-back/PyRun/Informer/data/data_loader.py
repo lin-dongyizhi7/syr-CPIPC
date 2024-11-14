@@ -346,10 +346,10 @@ class Dataset_Pred(Dataset):
             
         tmp_stamp = df_raw[['date']][border1:border2]
         tmp_stamp['date'] = pd.to_datetime(tmp_stamp.date)
-        print(border1)
-        print(border2)
-        print(tmp_stamp.date)
-        pred_dates = pd.date_range(tmp_stamp.date.values[-1], periods=self.pred_len+1, freq=self.freq)
+        try:
+            pred_dates = pd.date_range(tmp_stamp.date.values[-1], periods=self.pred_len+1, freq=self.freq)
+        except ValueError:
+            print('文件数据有误，请检查最后一行是否为空数据')
         
         df_stamp = pd.DataFrame(columns = ['date'])
         df_stamp.date = list(tmp_stamp.date.values) + list(pred_dates[1:])

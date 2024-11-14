@@ -370,6 +370,8 @@ class Exp_Informer(Exp_Basic):
 
     def predict(self, setting, path, name, DWT, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
+
+        print('data load')
         
         if load:
             self.model.load_state_dict(torch.load(path))
@@ -390,8 +392,10 @@ class Exp_Informer(Exp_Basic):
         folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-        
-        np.save(os.path.normpath(folder_path + f"/{'DWT_' if DWT else ''}real_prediction_Informer.npy"), preds)
+
+        res_file = os.path.normpath(folder_path + f"/{'DWT_' if DWT else ''}prediction_{self.args.pred_len}_Informer.npy")
+        np.save(res_file, preds)
+        print('save .npy file:' + res_file)
 
         # 提取第一个特征的预测值
         feature_index = 0  # 假设我们要绘制第一个特征
@@ -405,13 +409,15 @@ class Exp_Informer(Exp_Basic):
             plt.plot(time_steps, preds[i, :, feature_index], label=f'Sample {i + 1}')
 
         # 添加标题和标签
-        plt.title('Prediction Curve for Feature 1')
-        plt.xlabel('Time Step')
-        plt.ylabel('Prediction Data')
-        plt.legend()
+        plt.title('预测结果')
+        plt.xlabel('时间')
+        plt.ylabel('预测值')
+        # plt.legend()
 
         # 显示图形
-        plt.savefig(folder_path + 'prediction_res.png')
+        res_picture = os.path.normpath(folder_path + f"/{'DWT_' if DWT else ''}prediction_{self.args.pred_len}_Informer.png")
+        plt.savefig(res_picture)
+        print('save result picture:' + res_file)
         
         return
 

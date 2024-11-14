@@ -38,6 +38,16 @@
               </template>
             </el-select>
           </el-form-item>
+          <el-form-item label="预测长度">
+            <el-input-number
+                v-model="formModel.pred_len"
+                :step="1"
+                :min="2"
+                :max="1000"
+                show-input
+                size="small"
+            />
+          </el-form-item>
           <el-form-item label="画图风格">
             <el-select v-model="formModel.drawStyle">
               <el-option v-for="item in styles" :label="item.label" :value="item.value">
@@ -90,6 +100,7 @@ const formModel = reactive({
   filePath: "",
   file: null,
   model: '',
+  pred_len: 1,
   drawStyle: "common",
 });
 const formRef = ref();
@@ -163,6 +174,11 @@ const uploadRequest = () => {
 
 const startPredictModel = () => {
   starting.value = true;
+  const config = {
+    model: formModel.model,
+    pred_len: formModel.pred_len,
+    drawStyle: formModel.drawStyle
+  }
   if (formModel.filePath) {
     let paths = filePath.split('/');
     let name = paths.split('.')[0];
@@ -170,8 +186,7 @@ const startPredictModel = () => {
       name: name,
       type: 'path',
       filePath: formModel.filePath,
-      model: formModel.model,
-      drawStyle: formModel.drawStyle
+      ...config
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
@@ -181,8 +196,7 @@ const startPredictModel = () => {
       name: file.name.split('.')[0],
       type: 'file',
       data: fileData,
-      model: formModel.model,
-      drawStyle: formModel.drawStyle
+      ...config
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;

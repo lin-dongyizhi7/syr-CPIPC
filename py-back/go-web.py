@@ -36,7 +36,7 @@ app = JsonFlask(__name__)
 # 解决跨域
 CORS(app, supports_credentials=True)
 
-start_vue_server()
+# start_vue_server()
 
 runner = Runner()
 
@@ -87,6 +87,7 @@ def predict():
             'drawStyle': data['drawStyle'],
         },
         'data': data['data'] if 'data' in data else '',
+        'pred_len': data['pred_len'],
         'output': ''
     }
     runner.loadPredictParams(params)
