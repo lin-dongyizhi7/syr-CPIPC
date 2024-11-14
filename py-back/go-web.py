@@ -18,6 +18,7 @@ from json_flask import JsonFlask
 from json_response import JsonResponse
 
 from PyRun.run import Runner
+from start_vue import start_vue_server
 
 import json
 
@@ -26,14 +27,14 @@ from art import text2art
 # 艺术字
 art_text_1 = text2art(f"YZP AND SYR", font='slant')
 print(art_text_1)
-# print("❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤")
-# art_text_2 = text2art(f"SYR", font='slant')
-# print(art_text_2)
+
 # 创建视图应用
 app = JsonFlask(__name__)
 
 # 解决跨域
 CORS(app, supports_credentials=True)
+
+start_vue_server()
 
 runner = Runner()
 

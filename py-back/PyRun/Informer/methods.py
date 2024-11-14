@@ -27,3 +27,5 @@ def initModelData(config):
         else:
             raise ValueError(f"Unsupported file extension: {file_extension}")
         df.to_csv(f"{path}/{name}.csv", index=False)
+
+    return df

@@ -13,7 +13,7 @@
 **安装 Python 依赖项**
 在py-back文件夹中运行
 ```bash
-pip install -r requirments.txt 
+pip install -r requirements.txt 
 ```
 
 **安装 Vue 依赖项**

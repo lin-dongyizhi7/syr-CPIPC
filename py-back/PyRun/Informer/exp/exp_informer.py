@@ -368,7 +368,7 @@ class Exp_Informer(Exp_Basic):
 
         return mse
 
-    def predict(self, setting, path, name, load=False):
+    def predict(self, setting, path, name, DWT, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
         
         if load:
@@ -391,7 +391,7 @@ class Exp_Informer(Exp_Basic):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
-        np.save(os.path.normpath(folder_path + '/real_prediction.npy'), preds)
+        np.save(os.path.normpath(folder_path + f"/{'DWT_' if DWT else ''}real_prediction_Informer.npy"), preds)
 
         # 提取第一个特征的预测值
         feature_index = 0  # 假设我们要绘制第一个特征

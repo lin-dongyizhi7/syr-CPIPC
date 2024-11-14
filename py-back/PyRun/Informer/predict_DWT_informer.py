@@ -132,24 +132,24 @@ args.freq = args.freq[-1:]
 Exp = Exp_Informer
 
 def predict_DWT_informer(config):
-    initModelData(config)
+    df = initModelData(config)
     name = config['file_info']['name']
     path = os.path.normpath(f"{root}/opt/{name}/")
-    getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
+    cols = getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
 
+    args.root_path = path
+    args.data_path = name + '-DWT.csv'
+    args.target = 'ind'
+    args.data = name + '-DWT'
+    args.cols = cols
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
                .format(args.model, args.data, args.features, args.seq_len, args.label_len,
                        args.pred_len, args.d_model, args.n_heads, args.e_layers, args.d_layers,
                        args.d_ff, args.attn, args.factor, args.embed, args.distil, args.mix, args.des0, 0))
 
-    args.root_path = path
-    args.data_path = name + '-DWT.csv'
-    args.target = 'ind'
-    args.data = name + '-DWT'
-
     exp = Exp(args)
 
     print('>>>>>>>predicting : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
-    exp.predict(setting, config['model'], config['file_info']['name'], True)
+    exp.predict(setting, config['model'], config['file_info']['name'], True, True)
     return
