@@ -21,6 +21,14 @@ from PyRun.run import Runner
 
 import json
 
+from art import text2art
+
+# 艺术字
+art_text_1 = text2art(f"YZP AND SYR", font='slant')
+print(art_text_1)
+# print("❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤")
+# art_text_2 = text2art(f"SYR", font='slant')
+# print(art_text_2)
 # 创建视图应用
 app = JsonFlask(__name__)
 
