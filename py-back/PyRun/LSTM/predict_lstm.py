@@ -62,14 +62,14 @@ def predict_lstm(params):
             configs['data']['train_test_split'],
         )
     # 加载训练数据
-    x, y = data.get_full_data(
+    x, y = data.get_test_data(
         seq_len=configs['data']['sequence_length'],
         normalise=configs['data']['normalise']
     )
 
     pre_len = params['pred_len']
 
-    predictions = model.predict_next(x, pre_len,debug=False)
+    predictions = model.predict_sequences_multiple(x, 16, pre_len,debug=False)
     # result save
     folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
     if not os.path.exists(folder_path):
@@ -86,6 +86,8 @@ def predict_lstm(params):
     ax.plot(pre_x, predictions, label='Prediction Data')
     # 设置横轴刻度为整数
     ax.xaxis.set_major_locator(ticker.MultipleLocator(int(pre_len/8)))
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(0.25))
+    ax.set_ylim(-1, 1)
     if pre_len <= 30:
         ax.scatter(pre_x, predictions, marker='*')
     res_picture = os.path.normpath(folder_path + f"/prediction_{pre_len}_lstm.png")
