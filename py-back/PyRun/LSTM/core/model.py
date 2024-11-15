@@ -157,3 +157,13 @@ class Model():
 					curr_frame = np.insert(curr_frame, [window_size - 2], predicted[-1], axis=0)
 					print(curr_frame)
 				prediction_seqs.append(predicted)
+
+	def predict_next(self, data, prediction_len, debug=False):
+		if debug == False:
+			print('[Model] Predicting Next...')
+			return self.model.predict(data)[0:prediction_len]
+		else:
+			print('[Model] Predicting Next...')
+			print(self.model.predict(data)[0:prediction_len])
+
+

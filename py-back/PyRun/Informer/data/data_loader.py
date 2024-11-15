@@ -200,8 +200,8 @@ class Dataset_Custom(Dataset):
             self.label_len = size[1]
             self.pred_len = size[2]
         # init
-        assert flag in ['train', 'val', 'test','protr','prov','prote','prof']#修改了test和vali换
-        type_map = {'train':0, 'val':1, 'test':2, 'protr':3,'prov':4,'prote':5,'prof':6}
+        assert flag in ['train', 'val', 'test','protr','prov','prote','prof', 'pred']#修改了test和vali换
+        type_map = {'train':0, 'val':1, 'test':2, 'protr':3,'prov':4,'prote':5,'prof':6,'pred':7}
         self.set_type = type_map[flag]
         
         self.features = features
@@ -235,9 +235,9 @@ class Dataset_Custom(Dataset):
         num_vali = len(df_raw) - num_train - num_test
 
         border1s = [0, num_train-self.seq_len, len(df_raw)-num_test-self.seq_len,0,
-                    num_train-self.seq_len, len(df_raw)-num_test-self.seq_len,0]
+                    num_train-self.seq_len, len(df_raw)-num_test-self.seq_len,0,len(df_raw)-self.pred_len-self.seq_len]
         border2s = [num_train, num_train+num_vali, len(df_raw),num_train+num_vali,
-                    num_train+num_vali, len(df_raw),len(df_raw)]#修改
+                    num_train+num_vali, len(df_raw),len(df_raw),len(df_raw)]#修改
         border1 = border1s[self.set_type]
         border2 = border2s[self.set_type]
         

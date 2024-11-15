@@ -63,14 +63,14 @@ def predict_gru(params):
             configs['data']['train_test_split'],
         )
     # 加载训练数据
-    x, y = data.get_test_data(
+    x, y = data.get_full_data(
         seq_len=configs['data']['sequence_length'],
         normalise=configs['data']['normalise']
     )
 
     pre_len = params['pred_len']
 
-    predictions = model.predict_sequences_multiple(x, 16, pre_len,debug=False)
+    predictions = model.predict_next(x, pre_len,debug=False)
     print(predictions)
     # result save
     folder_path = os.path.normpath(f'{root}/opt/{name}/results/')

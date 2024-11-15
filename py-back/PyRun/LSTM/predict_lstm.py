@@ -69,7 +69,7 @@ def predict_lstm(params):
 
     pre_len = params['pred_len']
 
-    predictions = model.predict_sequences_multiple(x, 16, pre_len,debug=False)
+    predictions = model.predict_next(x, pre_len,debug=False)
     # result save
     folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
     if not os.path.exists(folder_path):

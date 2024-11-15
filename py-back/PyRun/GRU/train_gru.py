@@ -97,7 +97,7 @@ def train_gru(params):
     MAE = metrics.mean_absolute_error(y_train[:, 0], predictions_pointbypoint)
     print('train_MSE', MSE)
     print('train_MAE', MAE)
-    # plot_results_multiple(predictions_multiseq, y_test, configs['data']['sequence_length'])
+
     # plot_results_train(predictions_pointbypoint, y_train)
 
     # 测试结果

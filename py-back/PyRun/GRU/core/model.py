@@ -54,7 +54,7 @@ class Model():
 		
 		return self.model
 
-	def train(self, x, y, epochs, batch_size, save_dir,validation_split):#修改+data
+	def train(self, x, y, epochs, batch_size, save_dir, validation_split):#修改+data
 		timer = Timer()
 		timer.start()
 		print('[Model] Training Started')
@@ -137,8 +137,8 @@ class Model():
 					curr_frame = curr_frame[1:]
 					curr_frame = np.insert(curr_frame, [window_size - 2], predicted[-1], axis=0)
 				prediction_seqs.append(predicted)
-			return np.mean(np.array(prediction_seqs), axis=0)
-			# return prediction_seqs
+			# return np.mean(np.array(prediction_seqs), axis=0)
+			return prediction_seqs
 		else:
 			print('[Model] Predicting Sequences Multiple...')
 			prediction_seqs = []
@@ -157,3 +157,12 @@ class Model():
 					curr_frame = np.insert(curr_frame, [window_size - 2], predicted[-1], axis=0)
 					print(curr_frame)
 				prediction_seqs.append(predicted)
+
+	def predict_next(self, data, prediction_len, debug=False):
+		if debug == False:
+			print('[Model] Predicting Next...')
+			return self.model.predict(data)[0:prediction_len]
+		else:
+			print('[Model] Predicting Next...')
+			print(self.model.predict(data)[0:prediction_len])
+

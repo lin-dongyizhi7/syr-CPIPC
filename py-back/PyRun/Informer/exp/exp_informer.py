@@ -16,6 +16,7 @@ import os
 import time
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 # 获取项目根目录
 root = os.getenv('PROJECT_ROOT')
@@ -71,8 +72,8 @@ class Exp_Informer(Exp_Basic):
         if flag == 'test':
             shuffle_flag = False; drop_last = True; batch_size = args.batch_size; freq=args.freq
         elif flag =='pred':
-            shuffle_flag = False; drop_last = False; batch_size = 1; freq=args.detail_freq
-            Data = Dataset_Pred
+            shuffle_flag = False; drop_last = False; batch_size = args.batch_size; freq=args.detail_freq
+            # Data = Dataset_Pred
         elif flag =='protr':#修改了
             shuffle_flag = False; drop_last = True;  batch_size = 1; freq=args.freq#修改了drop_last
         elif flag =='prov':#修改了
@@ -332,6 +333,18 @@ class Exp_Informer(Exp_Basic):
         np.save(folder_path + 'pred.npy', prods)
         np.save(folder_path + 'true.npy', trods)
 
+        # 创建图形和子图
+        fig, ax = plt.subplots()
+        time_steps = np.arange(trods.shape[1])
+        # 绘制真实值
+        ax.plot(time_steps, trods[0, :, 0], label='真实值', marker='o', linestyle='-', color='blue')
+        # 绘制预测值
+        ax.plot(time_steps, prods[0, :, 0], label='预测值', marker='x', linestyle='--', color='red')
+        # 显示图形
+        res_picture = os.path.normpath(f"{root}/opt/myTry-test_pre_true.png")
+        plt.savefig(res_picture)
+        print('save result picture:' + res_picture)
+
         return
     def prof(self, setting):
         pro_data, pro_loader = self._get_data(flag='prof')
@@ -370,8 +383,6 @@ class Exp_Informer(Exp_Basic):
 
     def predict(self, setting, path, name, DWT, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
-
-        print('data load')
         
         if load:
             self.model.load_state_dict(torch.load(path))
@@ -385,6 +396,7 @@ class Exp_Informer(Exp_Basic):
                 pred_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
             preds.append(pred.detach().cpu().numpy())
 
+        print(preds)
         preds = np.array(preds)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
@@ -407,6 +419,11 @@ class Exp_Informer(Exp_Basic):
         # 绘制每个样本的第一个特征的预测值
         for i in range(preds.shape[0]):
             plt.plot(time_steps, preds[i, :, feature_index], label=f'Sample {i + 1}')
+            if self.args.pred_len <= 30:
+                plt.scatter(time_steps, preds[i, :, feature_index], marker='*')
+
+        # 设置横轴刻度为整数
+        plt.gca().xaxis.set_major_locator(ticker.MultipleLocator(int(self.args.pred_len / 8)))
 
         # 添加标题和标签
         plt.title('预测结果')
@@ -417,7 +434,7 @@ class Exp_Informer(Exp_Basic):
         # 显示图形
         res_picture = os.path.normpath(folder_path + f"/{'DWT_' if DWT else ''}prediction_{self.args.pred_len}_Informer.png")
         plt.savefig(res_picture)
-        print('save result picture:' + res_file)
+        print('save result picture:' + res_picture)
         
         return
 
