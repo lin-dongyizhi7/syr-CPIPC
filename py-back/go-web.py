@@ -36,7 +36,7 @@ from art import text2art
 # pipreqs生成使用到的包的requirements.txt
 
 # 艺术字
-art_text_1 = text2art(f"SYSTEMIC FINANCIAL RISK", font='slant')
+art_text_1 = text2art(f"SYSTEMIC FINANCIAL\n RISK", font='slant')
 print(art_text_1)
 
 # 创建视图应用
