@@ -51,7 +51,7 @@ start_vue_server()
 runner = Runner()
 
 # 创建子进程
-process = subprocess.Popen([os.path.normpath(project_root + 'DISFR-web/src/assets/logo.exe')], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+process = subprocess.Popen([os.path.normpath(project_root + '/DISFR-web/src/assets/logo.exe')], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 # 获取输出
 stdout, stderr = process.communicate()
