@@ -333,17 +333,17 @@ class Exp_Informer(Exp_Basic):
         np.save(folder_path + 'pred.npy', prods)
         np.save(folder_path + 'true.npy', trods)
 
-        # 创建图形和子图
-        fig, ax = plt.subplots()
-        time_steps = np.arange(trods.shape[1])
-        # 绘制真实值
-        ax.plot(time_steps, trods[0, :, 0], label='真实值', marker='o', linestyle='-', color='blue')
-        # 绘制预测值
-        ax.plot(time_steps, prods[0, :, 0], label='预测值', marker='x', linestyle='--', color='red')
-        # 显示图形
-        res_picture = os.path.normpath(f"{root}/opt/myTry-test_pre_true.png")
-        plt.savefig(res_picture)
-        print('save result picture:' + res_picture)
+        # # 创建图形和子图
+        # fig, ax = plt.subplots()
+        # time_steps = np.arange(trods.shape[1])
+        # # 绘制真实值
+        # ax.plot(time_steps, trods[0, :, 0], label='真实值', marker='o', linestyle='-', color='blue')
+        # # 绘制预测值
+        # ax.plot(time_steps, prods[0, :, 0], label='预测值', marker='x', linestyle='--', color='red')
+        # # 显示图形
+        # res_picture = os.path.normpath(f"{root}/opt/myTry-test_pre_true.png")
+        # plt.savefig(res_picture)
+        # print('save result picture:' + res_picture)
 
         return
     def prof(self, setting):
@@ -399,7 +399,7 @@ class Exp_Informer(Exp_Basic):
         print(preds)
         preds = np.array(preds)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
-        
+
         # result save
         folder_path = os.path.normpath(f'{root}/opt/{name}/results/')
         if not os.path.exists(folder_path):
@@ -424,6 +424,8 @@ class Exp_Informer(Exp_Basic):
 
         # 设置横轴刻度为整数
         plt.gca().xaxis.set_major_locator(ticker.MultipleLocator(int(self.args.pred_len / 8)))
+        plt.gca().yaxis.set_major_locator(ticker.MultipleLocator(0.25))
+        plt.gca().set_ylim(-1, 1)
 
         # 添加标题和标签
         plt.title('预测结果')

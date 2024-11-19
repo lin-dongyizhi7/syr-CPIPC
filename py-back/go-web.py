@@ -45,7 +45,7 @@ app = JsonFlask(__name__)
 # 解决跨域
 CORS(app, supports_credentials=True)
 
-# start_vue_server()
+start_vue_server()
 
 runner = Runner()
 
