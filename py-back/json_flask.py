@@ -1,3 +1,11 @@
+'''
+Author: lin-dongyizhi7 2985956026@qq.com
+Date: 2024-11-15 00:20:22
+LastEditors: lin-dongyizhi7 2985956026@qq.com
+LastEditTime: 2024-11-19 17:11:29
+FilePath: \systemic financial crises\py-back\json_flask.py
+Description: Systemic Financial Crises
+'''
 from flask import Flask, jsonify
 
 from json_response import JsonResponse

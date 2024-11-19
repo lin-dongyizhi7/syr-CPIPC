@@ -1,3 +1,12 @@
+'''
+Author: lin-dongyizhi7 2985956026@qq.com
+Date: 2024-11-15 00:20:22
+LastEditors: lin-dongyizhi7 2985956026@qq.com
+LastEditTime: 2024-11-19 17:10:52
+FilePath: \systemic financial crises\py-back\go-web.py
+Description: Systemic Financial CrisesE
+'''
+
 import sys
 import os
 import glob
@@ -27,7 +36,7 @@ from art import text2art
 # pipreqs生成使用到的包的requirements.txt
 
 # 艺术字
-art_text_1 = text2art(f"YZP AND SYR", font='slant')
+art_text_1 = text2art(f"SYSTEMIC FINANCIAL RISK", font='slant')
 print(art_text_1)
 
 # 创建视图应用

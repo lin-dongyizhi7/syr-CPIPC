@@ -1,3 +1,11 @@
+<!--
+ * @Author: lin-dongyizhi7 2985956026@qq.com
+ * @Date: 2024-11-15 00:20:21
+ * @LastEditors: lin-dongyizhi7 2985956026@qq.com
+ * @LastEditTime: 2024-11-19 17:33:34
+ * @FilePath: \systemic financial crises\DISFR-web\src\views\indexStruct\index.vue
+ * @Description: Systemic Financial Crises
+-->
 <template>
   <page>
     <template #input>
@@ -104,8 +112,8 @@
 <script setup lang="ts">
 import {ref, reactive} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
-import type {UploadProps, UploadFile} from "element-plus";
-import {ElMessage} from "element-plus";
+import type {UploadProps, UploadFile, UploadRawFile, UploadInstance} from "element-plus";
+import {ElMessage, genFileId} from "element-plus";
 import Papa from "papaparse";
 
 import Page from "../page.vue";
@@ -153,19 +161,19 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   return true;
 };
 
-let fileData;
-let file;
+let fileData: any;
+let file: any;
 const columns = ref([]);
 
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
   upload.value!.clearFiles()
-  const file = files[0]
+  const file = files[0] as UploadRawFile;
   file.uid = genFileId()
   upload.value!.handleStart(file)
 }
 
-const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFile[]) => {
   file = uploadFile;
   reset.value = false;
   Papa.parse(uploadFile.raw, {
@@ -181,7 +189,7 @@ const handleOnChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
 };
 
 const reset = ref(false);
-const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFile[]) => {
   if (uploadFiles.length === 0) {
     reset.value = true;
     columns.value = [];
@@ -194,7 +202,7 @@ const uploadRequest = () => {
 const startGenerateInd = () => {
   starting.value = true;
   if (formModel.filePath) {
-    let paths = filePath.split('/')
+    let paths = formModel.filePath.split('/')
     generateInd({
       name: paths[paths.length - 1].split('.')[0],
       filePath: formModel.filePath,

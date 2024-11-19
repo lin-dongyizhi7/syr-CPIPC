@@ -1,3 +1,11 @@
+<!--
+ * @Author: lin-dongyizhi7 2985956026@qq.com
+ * @Date: 2024-11-15 00:20:21
+ * @LastEditors: lin-dongyizhi7 2985956026@qq.com
+ * @LastEditTime: 2024-11-19 17:25:45
+ * @FilePath: \systemic financial crises\DISFR-web\src\App.vue
+ * @Description: Systemic Financial Crises
+-->
 <template>
   <div class="app-welcome" v-if="!enter">
     <div class="title">
