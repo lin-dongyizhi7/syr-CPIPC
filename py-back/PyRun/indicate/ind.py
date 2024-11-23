@@ -155,7 +155,7 @@ def generateInd(init_data):
     std = ind_col.std()
     ms = mean + std
 
-    if not init_data.draw:
+    if not init_data['draw']:
         return
 
     ind_col.plot(x_compat=True, figsize=(20, 10))

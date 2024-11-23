@@ -38,54 +38,65 @@
             </el-upload>
           </el-form-item>
         </div>
-        <el-form-item label="选取列">
-          <el-select v-model="formModel.cols" multiple placeholder="">
-            <el-option
-                v-for="item in columns"
-                :key="item"
-                :label="item"
-                :value="item"
+        <div class="info-input">
+          <el-form-item label="选取列">
+            <el-select v-model="formModel.cols" multiple placeholder="">
+              <template #header>
+                <el-checkbox
+                    v-model="checkAll"
+                    :indeterminate="indeterminate"
+                    @change="handleCheckAll"
+                >
+                  All
+                </el-checkbox>
+              </template>
+              <el-option
+                  v-for="item in columns"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+              >
+                <div class="flex items-center">
+                  <el-tag type="info" size="small">{{ item }}</el-tag>
+                </div>
+              </el-option>
+              <template #tag>
+                <el-tag type="success" v-for="item in formModel.cols" :key="item">{{ item }}</el-tag>
+              </template>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否画图">
+            <el-switch v-model="formModel.draw"></el-switch>
+          </el-form-item>
+          <el-form-item v-if="formModel.draw" label="风险阈值">
+            <el-select
+                filterable
+                allow-create
+                default-first-option
+                placeholder="自定义输入"
+                v-model="formModel.drawThreshold"
             >
-              <div class="flex items-center">
-                <el-tag type="info" size="small">{{ item }}</el-tag>
-              </div>
-            </el-option>
-            <template #tag>
-              <el-tag type="success" v-for="item in formModel.cols" :key="item">{{ item }}</el-tag>
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否画图">
-          <el-switch v-model="formModel.draw"></el-switch>
-        </el-form-item>
-        <el-form-item v-if="formModel.draw" label="风险阈值">
-          <el-select
-              filterable
-              allow-create
-              default-first-option
-              placeholder="自定义输入"
-              v-model="formModel.drawThreshold"
-          >
-            <el-option label="默认" value="default"></el-option>
-            <el-option label="不设置阈值" value="none"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="formModel.draw" label="画图风格">
-          <el-select filterable allow-create v-model="formModel.drawStyle">
-            <template #header>
-              <el-button link @click="showAddStyle = true">自定义</el-button>
-            </template>
-            <el-option v-for="item in styles" :label="item.label" :value="item.value">
-              <div style="display: flex; align-items: center">
-                <color-style :colors="item.colors"></color-style>
-                {{ item.label }}
-              </div>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否归一化">
-          <el-switch v-model="formModel.normal"></el-switch>
-        </el-form-item>
+              <el-option label="默认" value="default"></el-option>
+              <el-option label="不设置阈值" value="none"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="formModel.draw" label="画图风格">
+            <el-select filterable allow-create v-model="formModel.drawStyle">
+              <template #header>
+                <el-button link @click="showAddStyle = true">自定义</el-button>
+              </template>
+              <el-option v-for="item in styles" :label="item.label" :value="item.value">
+                <div style="display: flex; align-items: center">
+                  <color-style :colors="item.colors"></color-style>
+                  {{ item.label }}
+                </div>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否归一化">
+            <el-switch v-model="formModel.normal"></el-switch>
+          </el-form-item>
+        </div>
       </el-form>
     </template>
     <template #process>
@@ -164,6 +175,16 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
 let fileData: any;
 let file: any;
 const columns = ref([]);
+const indeterminate = ref(false);
+
+const handleCheckAll = (val) => {
+  indeterminate.value = false
+  if (val) {
+    formModel.cols = columns.value;
+  } else {
+    formModel.cols = [];
+  }
+}
 
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
@@ -243,5 +264,11 @@ const success = ref(false);
 
 .upload-file {
   width: 100%;
+}
+
+.info-input {
+  height: 200px;
+  overflow: scroll;
+  scrollbar-width: none;
 }
 </style>
