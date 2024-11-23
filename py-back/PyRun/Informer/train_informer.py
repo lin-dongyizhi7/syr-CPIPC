@@ -184,7 +184,7 @@ def train():
 
 def train_informer(config):
     initModelData(config)
-
+    cols = df.columns.tolist()[1:]
     name = config['file_info']['name']
     args.root_path = os.path.normpath(f"{root}/opt/{name}/")
     args.data_path = name + '.csv'
@@ -193,6 +193,8 @@ def train_informer(config):
     args.train_epochs = config['model_config']['totalEpoch']
     args.batch_size = config['model_config']['batchSize']
     args.gpu = config['model_config']['gpu']
+    args.enc_in = len(cols)
+    args.dec_in = len(cols)
 
     print('Args in experiment:')
     print(args)

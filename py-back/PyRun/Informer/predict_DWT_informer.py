@@ -123,6 +123,7 @@ data_parser = {
     'ind13-20-day': {'data': 'ind13-20-day.csv', 'T': 'ind', 'M': [10, 10, 10], 'S': [1, 1, 1], 'MS': [10, 10, 1]},
 }
 
+# args.features = 'M'
 if args.data in data_parser.keys():
     data_info = data_parser[args.data]
     args.data_path = data_info['data']
@@ -142,7 +143,7 @@ def predict_DWT_informer(config):
     df = initModelData(config)
     name = config['file_info']['name']
     path = os.path.normpath(f"{root}/opt/{name}/")
-    cols = getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
+    cols = getDWTRes(df, name)
 
     args.root_path = path
     args.data_path = name + '-DWT.csv'
@@ -150,6 +151,8 @@ def predict_DWT_informer(config):
     args.data = name + '-DWT'
     args.cols = cols
     args.pred_len = config['pred_len']
+    args.enc_in = len(cols)
+    args.dec_in = len(cols)
 
     setting = ('{}_{}_ft{}_sl{}_ll{}_pl{}_dm{}_nh{}_el{}_dl{}_df{}_at{}_fc{}_eb{}_dt{}_mx{}_{}_{}'
                .format(args.model, args.data, args.features, args.seq_len, args.label_len,

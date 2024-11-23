@@ -390,6 +390,8 @@ class Exp_Informer(Exp_Basic):
         self.model.eval()
         
         preds = []
+
+        print(pred_data)
         
         for i, (batch_x,batch_y,batch_x_mark,batch_y_mark) in enumerate(pred_loader):
             pred, true = self._process_one_batch(

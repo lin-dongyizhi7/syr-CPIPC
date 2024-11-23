@@ -227,6 +227,7 @@ const startGenerateInd = () => {
     generateInd({
       name: paths[paths.length - 1].split('.')[0],
       filePath: formModel.filePath,
+      cols: formModel.cols,
       draw: formModel.draw,
       drawThreshold: formModel.drawThreshold,
       drawStyle: formModel.drawStyle,
@@ -240,6 +241,7 @@ const startGenerateInd = () => {
     generateInd({
       name: file.name,
       data: fileData,
+      cols: formModel.cols,
       draw: formModel.draw,
       drawThreshold: formModel.drawThreshold,
       drawStyle: formModel.drawStyle,

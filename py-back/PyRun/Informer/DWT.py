@@ -28,8 +28,8 @@ def DWT(X, cols, wavelet, level):
                 X[i] = m[:len(X)]
     return X#定义小波分解函数
 
-def getDWTRes(file, name):
-    df = pd.read_csv(file)  # 导入数据
+def getDWTRes(df, name):
+    # print(df.head())
     cols = df.columns.tolist()[1:]
     df_DWT = DWT(df, cols, 'sym4', 4)
 

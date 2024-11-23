@@ -122,6 +122,7 @@ data_parser = {
     'ind13-20-day':{'data': 'ind13-20-day.csv', 'T': 'ind', 'M': [10, 10, 10], 'S': [1, 1, 1], 'MS': [10, 10, 1]},
 }
 
+# args.features = 'M'
 if args.data in data_parser.keys():
     data_info = data_parser[args.data]
     args.data_path = data_info['data']
@@ -184,10 +185,10 @@ def train():
         torch.cuda.empty_cache()
 
 def train_DWT_informer(config):
-    initModelData(config)
+    df = initModelData(config)
     name = config['file_info']['name']
     path = os.path.normpath(f"{root}/opt/{name}/")
-    cols = getDWTRes(os.path.normpath(f"{path}/{name}.csv"), name)
+    cols = getDWTRes(df, name)
 
     args.root_path = path
     args.data_path = name + '-DWT.csv'
@@ -197,6 +198,8 @@ def train_DWT_informer(config):
     args.train_epochs = config['model_config']['totalEpoch']
     args.batch_size = config['model_config']['batchSize']
     args.gpu = config['model_config']['gpu']
+    args.enc_in = len(cols)
+    args.dec_in = len(cols)
 
     print('Args in experiment:')
     print(args)

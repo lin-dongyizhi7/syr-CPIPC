@@ -98,6 +98,9 @@ def dataLoader(data):
             raise ValueError(f"Unsupported file extension: {file_extension}")
     else:
         df = pd.DataFrame(data['data'])
+
+    used_cols = ['date'] + data['cols']
+    df = df[used_cols]
     # 复值取反
     for column in df.columns:
         # 检查列中的值是否全部为负数
@@ -118,8 +121,13 @@ def generateInd(init_data):
     # data.to_excel(f"{root}/opt/{name}-ind.xlsx")
     # return
 
-    start_day = '2018-01-01'
-    con1 = data.index < start_day
+    # start_day = '2018-01-01'
+    # con1 = data.index < start_day
+
+    print(data.head())
+
+    date = data.index.tolist()
+
     head_len = int(len(data) * 2 / 3)
     header = data[:head_len]
 
@@ -141,12 +149,17 @@ def generateInd(init_data):
         ic_all = pd.concat([ic_all, a[i]], axis=1)
     ic_all.dropna(inplace=True)  # 将上面的数据组合
 
-    con2 = ic_all.index >= start_day
-    ic_all = ic_all[con2]  # 取之后的
+    # con2 = ic_all.index >= start_day
+    # ic_all = ic_all[con2]  # 取之后的
+    ic_all = ic_all[head_len-1:]
+
 
     EW = pd.concat([cdf_all, ic_all], axis=0)
     EW = pd.concat([EW, pd.DataFrame(columns=['ind'])], sort=False)
     INDEX(EW, 0.93)
+
+    EW.insert(0, 'date', date)
+    EW.set_index('date')
 
     EW.to_csv(os.path.normpath(f"{root}/opt/{name}-ind.csv"), index=False)
 
@@ -159,10 +172,11 @@ def generateInd(init_data):
         return
 
     ind_col.plot(x_compat=True, figsize=(20, 10))
-    matplotlib.pyplot.axhline(a)
+    matplotlib.pyplot.axhline(init_data['drawThreshold'])
     plt.ylabel("ind")
+    plt.autoscale(enable=True, axis='y')
     plt.savefig(os.path.normpath(f"{root}/opt/{name}-ind.png"))
-    plt.show()
+    # plt.show()
 
     result = {'info': 'success'}
     return result
