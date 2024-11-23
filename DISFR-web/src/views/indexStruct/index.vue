@@ -176,7 +176,7 @@ let fileData: any;
 let file: any;
 const columns = ref([]);
 const indeterminate = ref(false);
-
+const checkAll = ref(false);
 const handleCheckAll = (val) => {
   indeterminate.value = false
   if (val) {

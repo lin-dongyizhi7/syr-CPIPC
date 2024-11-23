@@ -21,7 +21,7 @@ os.environ['PROJECT_ROOT'] = project_root
 # for i in sys.path:
 #     print(i)
 
-from flask import request
+from flask import Flask, request, render_template, jsonify
 from flask_cors import *
 
 from json_flask import JsonFlask
@@ -41,12 +41,19 @@ art_text_1 = text2art(f"SYSTEMIC FINANCIAL\n RISK", font='slant')
 print(art_text_1)
 
 # 创建视图应用
-app = JsonFlask(__name__)
+# app = JsonFlask(__name__)
+app = Flask(__name__,
+static_folder='./dist',  #设置静态文件夹目录
+template_folder = "./dist",
+static_url_path="")
 
 # 解决跨域
 CORS(app, supports_credentials=True)
 
-start_vue_server()
+# start_vue_server()
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 runner = Runner()
 
@@ -68,7 +75,7 @@ def generateInd():
     data = json.loads(request.data)
     runner.loadIndData(data)
     result = runner.generateIndexes()
-    return JsonResponse.success(msg='查询成功', data=result)
+    return jsonify(msg='指标构建成功', data=result)
 
 
 @app.route("/train", methods=["POST"])  # 训练
@@ -90,7 +97,7 @@ def train():
     }
     runner.loadTrainParams(params)
     isOk = runner.train()
-    return JsonResponse.success(msg='训练成功') if isOk else JsonResponse.fail(msg='训练失败')
+    return jsonify(msg='训练成功' if isOk else '训练失败')
 
 
 @app.route("/predict", methods=["POST"])  # 预测
@@ -112,7 +119,7 @@ def predict():
     }
     runner.loadPredictParams(params)
     isOk = runner.predict()
-    return JsonResponse.success(msg='预测成功') if isOk else JsonResponse.fail(msg='预测失败')
+    return jsonify(msg='预测成功' if isOk else '预测失败')
 
 @app.route("/getModelsList", methods=["GET"])
 def getModelsList():
@@ -124,7 +131,7 @@ def getModelsList():
             pth_files.extend(glob.glob(os.path.join(dir_path, ext)))
     for pth in pth_files:
         result.append(pth.replace('/', '\\'))
-    return JsonResponse.success(msg='模型列表查询成功', data=result)
+    return jsonify(msg='模型列表查询成功', data = result)
 
 # 运行flask：默认是5000端口，此处设置端口为666
 if __name__ == '__main__':
