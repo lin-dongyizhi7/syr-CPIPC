@@ -69,6 +69,7 @@ def predict_gru(params):
             params['data'],
             configs['data']['train_test_split'],
         )
+    configs['data']['columns'] = data.in_cols
     # 加载训练数据
     x, y = data.get_test_data(
         seq_len=configs['data']['sequence_length'],

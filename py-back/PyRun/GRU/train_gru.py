@@ -68,9 +68,12 @@ def train_gru(params):
             params['data'],
             configs['data']['train_test_split'],
         )
+    configs['data']['columns'] = data.in_cols
+    configs['model']['layers'][0]['input_dim'] = len(data.in_cols)
     #创建RNN模型
     model = Model()
     mymodel = model.build_model(configs)
+    # print(mymodel.summary())
     # plot_model(mymodel, to_file='model.png',show_shapes=True)
 
     #加载训练数据

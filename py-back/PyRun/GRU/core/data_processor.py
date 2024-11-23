@@ -15,6 +15,7 @@ class DataLoader():
         self.len_train = len(self.data_train)
         self.len_test = len(self.data_test)
         self.len_full = len(self.data_full)
+        self.in_cols = cols
         self.len_train_windows = None
 
     def get_test_data(self, seq_len, normalise):

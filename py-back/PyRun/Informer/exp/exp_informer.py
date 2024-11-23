@@ -398,7 +398,7 @@ class Exp_Informer(Exp_Basic):
                 pred_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
             preds.append(pred.detach().cpu().numpy())
 
-        print(preds)
+        # print(preds)
         preds = np.array(preds)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
 

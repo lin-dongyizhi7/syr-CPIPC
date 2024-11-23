@@ -67,6 +67,8 @@ def train_lstm(params):
             params['data'],
             configs['data']['train_test_split'],
         )
+    configs['data']['columns'] = data.in_cols
+    configs['model']['layers'][0]['input_dim'] = len(data.in_cols)
     #创建RNN模型
     model = Model()
     mymodel = model.build_model(configs)
