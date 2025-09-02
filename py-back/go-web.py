@@ -18,7 +18,7 @@ from json_flask import JsonFlask
 from json_response import JsonResponse
 
 from PyRun.run import Runner
-from start_vue import start_vue_server
+# from start_vue import start_vue_server
 
 import json
 
@@ -36,7 +36,7 @@ app = JsonFlask(__name__)
 # 解决跨域
 CORS(app, supports_credentials=True)
 
-start_vue_server()
+# start_vue_server()
 
 runner = Runner()
 
