@@ -17,9 +17,6 @@ project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 os.environ['PROJECT_ROOT'] = project_root
 # print(f'project root:{project_root}')
 
-# for i in sys.path:
-#     print(i)
-
 from flask import request
 from flask_cors import *
 
@@ -27,14 +24,12 @@ from json_flask import JsonFlask
 from json_response import JsonResponse
 
 from PyRun.run import Runner
-# from start_vue import start_vue_server
 
 import json
 
 from art import text2art
 
 # pipreqs生成使用到的包的requirements.txt
-
 # 艺术字
 art_text_1 = text2art(f"SYSTEMIC FINANCIAL\n RISK", font='slant')
 print(art_text_1)
@@ -44,8 +39,6 @@ app = JsonFlask(__name__)
 
 # 解决跨域
 CORS(app, supports_credentials=True)
-
-# start_vue_server()
 
 runner = Runner()
 

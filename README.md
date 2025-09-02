@@ -1,28 +1,43 @@
-# Systemic financial risk
+# Systemic Financial Risk
 
 ## 1. Introduction
-This is a project designed to train and predict systemic financial risk. In this project, you can construct risk indicators,
-From a variety of models (DWT - Informer, Informer, LSTM, GRU helped) selecting and training to get their forecast model for systemic financial risk prediction.
+This project is designed to train and predict systemic financial risk. In this project, you can construct risk indicators and select from multiple models (DWT-Informer, Informer, LSTM, GRU) to train your own models for prediction.
 
-## 2. Use method
+## 2. Getting Started
 
-To use this item, follow these steps:
+Follow these steps:
 
-### 1. Clone warehouse
-### 2. Install dependencies
-** Install Python dependencies **
-Run in the py-back folder
+### 1) Clone the repository
+
+### 2) Install dependencies
+**Install Python dependencies**  
+Run in the `py-back` folder:
 ```bash
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
-** Install Vue dependencies **
-Run it in the DISFR-web folder
+**Install Vue dependencies**  
+Run in the `DISFR-web` folder:
 ```bash
 npm install
 ```
-### 3. Run the project
-Double-click the ```start.bat``` file, and the batch file will do the following:
 
-Start the Python back-end service.
-Start the Vue front-end service.
+### 3) One-click start (recommended)
+Double-click `start-all.bat` in the project root. It will:
+- Start the Python backend (Flask on port 666)
+- Start the Vue frontend (Vite on port 7527)
+
+Then open your browser at `http://localhost:7527`.
+
+### 4) Manual start (optional)
+Run them in two terminals:
+- Backend:
+```bash
+cd py-back
+python go-web.py
+```
+- Frontend:
+```bash
+cd DISFR-web
+npm run dev
+```
