@@ -1,3 +1,11 @@
+<!--
+ * @Author: lin-dongyizhi7 2985956026@qq.com
+ * @Date: 2024-11-15 00:20:21
+ * @LastEditors: lin-dongyizhi7 2985956026@qq.com
+ * @LastEditTime: 2024-11-19 17:26:32
+ * @FilePath: \systemic financial crises\DISFR-web\src\views\home.vue
+ * @Description: Systemic Financial Crises
+-->
 <template>
   <div class="home-page">
     <div class="title">
@@ -8,10 +16,10 @@
         <index-struct></index-struct>
       </el-tab-pane>
       <el-tab-pane label="模型训练">
-        <train-page v-if="activeTab === '1'"></train-page>
+        <train-page v-if="activeTab == 1"></train-page>
       </el-tab-pane>
       <el-tab-pane label="风险预测">
-        <predict-page v-if="activeTab === '2'"></predict-page>
+        <predict-page v-if="activeTab == 2"></predict-page>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -29,7 +37,7 @@ import i18n from "../i18n/index";
 
 const activeTab = ref(0);
 
-const handleChange = (name) => {
+const handleChange = (name: any) => {
   activeTab.value = name;
 };
 </script>

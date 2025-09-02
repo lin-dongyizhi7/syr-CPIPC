@@ -1,3 +1,11 @@
+<!--
+ * @Author: lin-dongyizhi7 2985956026@qq.com
+ * @Date: 2024-11-15 00:20:21
+ * @LastEditors: lin-dongyizhi7 2985956026@qq.com
+ * @LastEditTime: 2024-11-19 17:33:52
+ * @FilePath: \systemic financial crises\DISFR-web\src\views\predict\index.vue
+ * @Description: Systemic Financial Crises
+-->
 <template>
   <page>
     <template #input>
@@ -6,24 +14,24 @@
           <div class="info-tip">下面两种方式二选一即可</div>
           <el-form-item label="输入待处理文件夹路径" label-position="top" prop="filePath">
             <el-input
-                v-model="formModel.filePath"
-                placeholder="C:\Users\Desktop\my-files"
+              v-model="formModel.filePath"
+              placeholder="C:\Users\Desktop\my-files"
             ></el-input>
           </el-form-item>
           <el-form-item label="" label-position="top">
             <el-upload
-                ref="upload"
-                class="upload-file"
-                drag
-                :limit="1"
-                :http-request="uploadRequest"
-                :before-upload="handleBeforeUpload"
-                :on-change="handleOnChange"
-                :on-remove="handleOnRemove"
-                :on-exceed="handleExceed"
+              ref="upload"
+              class="upload-file"
+              drag
+              :limit="1"
+              :http-request="uploadRequest"
+              :before-upload="handleBeforeUpload"
+              :on-change="handleOnChange"
+              :on-remove="handleOnRemove"
+              :on-exceed="handleExceed"
             >
               <el-icon class="el-icon--upload">
-                <upload-filled/>
+                <upload-filled />
               </el-icon>
               <div class="el-upload__text">拖拽文件到此处 或者 <em>点击此处</em></div>
               <div class="el-upload__tip">小于10MB的csv/xlsx/xls文件</div>
@@ -31,8 +39,7 @@
           </el-form-item>
           <el-form-item label="选择模型" label-position="left" prop="filePath">
             <el-select @focus="getModels" placeholder="" v-model="formModel.model">
-              <el-option v-for="item in models" :label="item" :value="item">
-              </el-option>
+              <el-option v-for="item in models" :label="item" :value="item"> </el-option>
               <template #label="{ label, value }">
                 <span style="font-size: 12px">{{ transPath(label) }}</span>
               </template>
@@ -40,12 +47,12 @@
           </el-form-item>
           <el-form-item label="预测长度">
             <el-input-number
-                v-model="formModel.pred_len"
-                :step="1"
-                :min="1"
-                :max="1000"
-                show-input
-                size="small"
+              v-model="formModel.pred_len"
+              :step="1"
+              :min="1"
+              :max="1000"
+              show-input
+              size="small"
             />
           </el-form-item>
           <el-form-item label="画图风格">
@@ -63,11 +70,12 @@
     </template>
     <template #process>
       <opt-btn-progress
-          opt-name="预测"
-          :disbled="!formModel.file && !formModel.filePath"
-          :reset="reset"
-          @start="startPredictModel"
-          @success="success = true">
+        opt-name="预测"
+        :disbled="!formModel.file && !formModel.filePath"
+        :reset="reset"
+        @start="startPredictModel"
+        @success="success = true"
+      >
       </opt-btn-progress>
     </template>
     <template #output>
@@ -75,31 +83,36 @@
         <div v-if="starting">预测中...</div>
       </div>
       <div v-if="!starting && success && finished">
-          <div>预测完成，保存到opt目录下</div>
-        </div>
+        <div>预测完成，保存到opt目录下</div>
+      </div>
     </template>
   </page>
 </template>
 
 <script setup lang="ts">
-import {ref, reactive, onMounted} from "vue";
-import {UploadFilled} from "@element-plus/icons-vue";
-import type {UploadProps, UploadFile} from "element-plus";
-import {ElMessage} from "element-plus";
+import { ref, reactive, onMounted } from "vue";
+import { UploadFilled } from "@element-plus/icons-vue";
+import type {
+  UploadProps,
+  UploadFile,
+  UploadRawFile,
+  UploadInstance,
+} from "element-plus";
+import { ElMessage, genFileId } from "element-plus";
 import Papa from "papaparse";
 
 import Page from "../page.vue";
 import OptBtnProgress from "../../components/opt-btn-progress.vue";
 import ColorStyle from "../../components/color-style.vue";
 
-import {styles} from "../../enum/options";
+import { styles } from "../../enum/options";
 
-import {startPredict, getModelsList} from "../../api/api.ts";
+import { startPredict, getModelsList } from "../../api/api.ts";
 
 const formModel = reactive({
   filePath: "",
   file: null,
-  model: '',
+  model: "",
   pred_len: 1,
   drawStyle: "common",
 });
@@ -107,7 +120,7 @@ const formRef = ref();
 
 const formRules = {
   //   filePath: [{ required: true, message: "未上传文件" }],
-  model: [{required: true, message: "未上传文件"}]
+  model: [{ required: true, message: "未上传文件" }],
 };
 
 const models = ref([]);
@@ -123,14 +136,14 @@ const getModels = async () => {
 
 function transPath(path) {
   // 获取最后两个部分
-  return path.split('\\').slice(-2).join('\\');
+  return path.split("\\").slice(-2).join("\\");
 }
 
 const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   if (
-      rawFile.type.endsWith("csv") &&
-      rawFile.type.endsWith("xlsx") &&
-      rawFile.type.endsWith("xls")
+    rawFile.type.endsWith("csv") &&
+    rawFile.type.endsWith("xlsx") &&
+    rawFile.type.endsWith("xls")
   ) {
     ElMessage.error("文件必须是csv/xlsx/xls格式!");
     return false;
@@ -141,16 +154,16 @@ const handleBeforeUpload: UploadProps["beforeUpload"] = (rawFile) => {
   return true;
 };
 
-let fileData;
-let file;
+let fileData: any;
+let file: any;
 
-const upload = ref<UploadInstance>()
-const handleExceed: UploadProps['onExceed'] = (files) => {
-  upload.value!.clearFiles()
-  const file = files[0]
-  file.uid = genFileId()
-  upload.value!.handleStart(file)
-}
+const upload = ref<UploadInstance>();
+const handleExceed: UploadProps["onExceed"] = (files) => {
+  upload.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  upload.value!.handleStart(file);
+};
 
 const handleOnChange = (uploadFile: UploadFile) => {
   file = uploadFile;
@@ -167,30 +180,29 @@ const handleOnChange = (uploadFile: UploadFile) => {
 };
 
 const reset = ref(false);
-const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+const handleOnRemove = (uploadFile: UploadFile, uploadFiles: UploadFile[]) => {
   if (uploadFiles.length === 0) {
     reset.value = true;
   }
-}
-
-const uploadRequest = () => {
 };
+
+const uploadRequest = () => {};
 
 const startPredictModel = () => {
   starting.value = true;
   const config = {
     model: formModel.model,
     pred_len: formModel.pred_len,
-    drawStyle: formModel.drawStyle
-  }
+    drawStyle: formModel.drawStyle,
+  };
   if (formModel.filePath) {
-    let paths = filePath.split('/');
-    let name = paths.split('.')[0];
+    let paths = formModel.filePath.split("/");
+    let name = paths[paths.length - 1].split(".")[0];
     startPredict({
       name: name,
-      type: 'path',
+      type: "path",
       filePath: formModel.filePath,
-      ...config
+      ...config,
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;
@@ -198,10 +210,10 @@ const startPredictModel = () => {
     });
   } else {
     startPredict({
-      name: file.name.split('.')[0],
-      type: 'file',
+      name: file.name.split(".")[0],
+      type: "file",
       data: fileData,
-      ...config
+      ...config,
     }).then((results: any) => {
       finished.value = true;
       starting.value = false;

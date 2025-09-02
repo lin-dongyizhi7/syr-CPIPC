@@ -1,3 +1,11 @@
+'''
+Author: lin-dongyizhi7 2985956026@qq.com
+Date: 2024-11-15 00:20:22
+LastEditors: lin-dongyizhi7 2985956026@qq.com
+LastEditTime: 2024-11-19 17:12:48
+FilePath: \systemic financial crises\py-back\start_vue.py
+Description: Systemic Financial Crises
+'''
 import subprocess
 import os
 

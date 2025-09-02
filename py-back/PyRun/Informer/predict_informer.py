@@ -1,3 +1,10 @@
+'''
+Description: Systemic Financial Crises
+version: 1.0
+Author: YZP & SYR
+Email: yys220124@outlook.com
+Tip: Competition code support only, please contact the author
+'''
 import argparse
 import numpy as np
 import random
